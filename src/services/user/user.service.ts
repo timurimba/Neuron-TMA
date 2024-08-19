@@ -26,5 +26,12 @@ export const UserService = {
 		await update(userRef, {
 			isHadNft: true
 		})
+	},
+	setAddressWallet: async (telegramUserId: string, addressWallet: string) => {
+		const userRef = ref(database, `users/${telegramUserId}`)
+
+		await update(userRef, {
+			addressWallet
+		})
 	}
 }
