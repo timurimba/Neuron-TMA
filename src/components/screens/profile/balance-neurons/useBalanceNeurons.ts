@@ -26,7 +26,7 @@ export const useBalanceNeurons = () => {
 	const isLoadingCountNfts = isLoadingCountAllNfts || isLoadingAvailableCountNft
 
 	return {
-		myCountNft: myCountNft.length,
+		myCountNft: myCountNft?.length,
 		availableCountNfts: availableCountNfts?.length!,
 		countAllNfts,
 		isLoadingCountNfts,
