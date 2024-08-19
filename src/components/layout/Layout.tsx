@@ -19,7 +19,6 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 
 	useEffect(() => {
 		if (wallet) {
-			console.log()
 			setAddressWallet({
 				telegramId: `${window.Telegram.WebApp.initDataUnsafe.user?.id}`,
 				wallet: Address.parse(wallet).toString()
