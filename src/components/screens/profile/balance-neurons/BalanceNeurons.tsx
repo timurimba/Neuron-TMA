@@ -18,7 +18,9 @@ const BalanceNeurons: FC = () => {
 		<div className={styles.wrapper}>
 			<div>
 				<h2>My NEURONs</h2>
-				<strong>{isLoadingMyCountNft ? 'Loading...' : myCountNft}</strong>
+				<strong>
+					{isLoadingMyCountNft ? 'Loading...' : myCountNft ? myCountNft : 0}
+				</strong>
 				<a href='https://t.me/StudyLabs_team'>
 					<img className='h-10 w-10' src={support} alt='' />
 					<span>Support</span>
