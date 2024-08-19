@@ -1,0 +1,10 @@
+.button {
+	@apply w-full block cursor-pointer transition-all p-2 rounded-2xl bg-black text-white font-bold uppercase;
+	&:active {
+		@apply scale-95;
+	}
+	&:disabled {
+		background-color: rgba(0, 0, 0, 0.1);
+		@apply cursor-not-allowed;
+	}
+}

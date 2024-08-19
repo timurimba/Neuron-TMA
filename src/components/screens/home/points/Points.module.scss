@@ -1,0 +1,19 @@
+.points {
+	@apply rounded-xl flex justify-between  items-center p-4 mt-10;
+	background-color: rgba(0, 0, 0, 0.03);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	> div {
+		@apply flex items-center gap-x-2;
+		> img {
+			@apply w-7 h-7;
+		}
+		> span {
+			@apply text-xl font-bold text-black;
+		}
+	}
+	> span {
+		@apply text-2xl font-bold;
+
+		color: rgb(102, 102, 102);
+	}
+}

@@ -1,0 +1,9 @@
+.wrapper {
+	@apply mt-5;
+	> img {
+		@apply w-[150px] mx-auto block mb-5 rounded-lg;
+	}
+	> p {
+		@apply flex items-center gap-x-2 justify-center text-black font-bold text-xl my-5;
+	}
+}

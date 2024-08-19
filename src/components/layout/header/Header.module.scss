@@ -1,0 +1,20 @@
+.header {
+	@apply flex justify-between items-center py-2 px-4 rounded-b-xl;
+	background-color: rgba(247, 247, 247, 0.9);
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+	img {
+		@apply w-6 h-6;
+	}
+	> div {
+		@apply flex items-center gap-x-2;
+		&:first-child {
+			> h1 {
+				@apply uppercase font-bold text-2xl;
+				color: rgb(102, 102, 102);
+			}
+		}
+	}
+	button {
+		@apply bg-black;
+	}
+}

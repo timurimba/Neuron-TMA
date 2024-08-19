@@ -1,0 +1,15 @@
+.progress {
+	@apply relative flex items-center justify-center  w-full my-5;
+	> div {
+		@apply w-full h-6 overflow-hidden relative rounded-xl;
+		background-color: #7a7a7a;
+		> div {
+			@apply h-full;
+			background-color: #020202;
+			transition: width 0.5s ease;
+		}
+		> span {
+			@apply absolute text-white text-sm font-bold text-center w-full top-0 left-0 h-full flex justify-center items-center pointer-events-none;
+		}
+	}
+}

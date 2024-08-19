@@ -1,0 +1,15 @@
+.balance {
+	@apply mt-5 flex justify-between items-center p-4;
+	background-color: rgba(0, 0, 0, 0.03);
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	> div {
+		@apply text-black font-bold flex items-center gap-x-2;
+		> img {
+			@apply w-7 h-7;
+		}
+	}
+	> span {
+		@apply text-xl font-bold text-black;
+	}
+}
