@@ -8,6 +8,7 @@ import { queryClient } from '@/providers/tanstack/TanstackProvider'
 
 import { useWallet } from '@/hooks/useWallet'
 
+import { telegramId } from '@/consts/consts'
 import { database } from '@/database/firebase'
 import { useTimerStore } from '@/store/store'
 
@@ -20,9 +21,7 @@ export const useTimer = () => {
 			const setIsHadNft = async () => {
 				const nfts = await TonService.getNfts(wallet)
 				if (nfts.length) {
-					UserService.setIsHadNft(
-						`${window.Telegram.WebApp.initDataUnsafe.user!.id}`
-					)
+					UserService.setIsHadNft(`${telegramId}`)
 				}
 			}
 			setIsHadNft()
@@ -30,10 +29,7 @@ export const useTimer = () => {
 	}, [wallet])
 
 	const initTimer = async () => {
-		const userRef = ref(
-			database,
-			`users/${window.Telegram.WebApp.initDataUnsafe.user!.id}`
-		)
+		const userRef = ref(database, `users/${telegramId}`)
 		let intervalId: NodeJS.Timeout | null = null
 
 		onValue(userRef, async snapshot => {

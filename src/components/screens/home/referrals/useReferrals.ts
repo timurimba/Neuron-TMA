@@ -2,16 +2,17 @@ import { useQuery } from '@tanstack/react-query'
 
 import { UserService } from '@/services/user/user.service'
 
+import { telegramId } from '@/consts/consts'
+
 export const useRefferals = () => {
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['get-user'],
-		queryFn: () =>
-			UserService.getUser(`${window.Telegram.WebApp.initDataUnsafe.user!.id}`)
+		queryFn: () => UserService.getUser(telegramId)
 	})
 
 	const inviteFriend = () => {
 		window.open(
-			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/Neuron_ton_bot?start=${window.Telegram.WebApp.initDataUnsafe.user!.id}`)}`,
+			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/Neuron_ton_bot?start=${telegramId}`)}`,
 			'_blank'
 		)
 	}

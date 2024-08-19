@@ -7,6 +7,7 @@ import RightArm from '@/assets/images/home/right hand.png'
 
 import styles from './Clicker.module.scss'
 import { useClicker } from './useClicker'
+import { telegramId } from '@/consts/consts'
 
 const Clicker: FC = () => {
 	const { user, mutate } = useClicker()
@@ -15,9 +16,7 @@ const Clicker: FC = () => {
 		<div className={styles.clicker}>
 			<div>
 				<img
-					onClick={() =>
-						mutate(`${window.Telegram.WebApp.initDataUnsafe.user!.id}`)
-					}
+					onClick={() => mutate(telegramId)}
 					src={!!user?.timer ? (user.timer.isProcessing ? Face2 : Face) : Face}
 					alt='Face'
 				/>

@@ -6,13 +6,13 @@ import { UserService } from '@/services/user/user.service'
 import pointsImg from '@/assets/images/home/neuron-points.png'
 
 import styles from './Points.module.scss'
+import { telegramId } from '@/consts/consts'
 import { useTimerStore } from '@/store/store'
 
 const Points: FC = () => {
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['get-user'],
-		queryFn: () =>
-			UserService.getUser(`${window.Telegram.WebApp.initDataUnsafe.user!.id}`)
+		queryFn: () => UserService.getUser(telegramId)
 	})
 
 	const { points } = useTimerStore(state => state)

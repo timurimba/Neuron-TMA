@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { toNano } from 'ton-core'
+import { Address, Cell, toNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
 import { useWallet } from '@/hooks/useWallet'
+
+import { telegramId } from '@/consts/consts'
 
 const images: any = import.meta.glob('@/assets/images/nft/*.png', {
 	eager: true
@@ -21,11 +23,7 @@ export const useBuyNft = () => {
 	const { mutate: transferNft } = useMutation({
 		mutationKey: ['transfer-nft'],
 		mutationFn: (data: { wallet: string; randomNftAddress: string }) =>
-			TonService.transferNft(
-				data.wallet,
-				data.randomNftAddress,
-				`${window.Telegram.WebApp.initDataUnsafe.user!.id}`
-			)
+			TonService.transferNft(data.wallet, data.randomNftAddress, telegramId)
 	})
 
 	const { sender, wallet } = useWallet()
@@ -33,20 +31,26 @@ export const useBuyNft = () => {
 	const buyNft = async () => {
 		try {
 			const tx = await sender.send({
-				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-				value: toNano(6)
+				// to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
+				to: Address.parse(wallet!),
+				value: toNano(0.01)
 			})
 
-			const availableNfts = await TonService.getNfts(
-				import.meta.env.VITE_OWNER_WALLET_ADDRESS
-			)
+			const binaryData = Buffer.from(tx.boc, 'base64')
+			const cell = Cell.fromBoc(binaryData)[0]
 
-			const randomNftAddress =
-				availableNfts[Math.floor(Math.random() * availableNfts.length)].address
-			transferNft({
-				wallet: wallet!,
-				randomNftAddress
-			})
+			console.log(cell.hash().toString('hex'))
+
+			// const availableNfts = await TonService.getNfts(
+			// 	import.meta.env.VITE_OWNER_WALLET_ADDRESS
+			// )
+
+			// const randomNftAddress =
+			// 	availableNfts[Math.floor(Math.random() * availableNfts.length)].address
+			// transferNft({
+			// 	wallet: wallet!,
+			// 	randomNftAddress
+			// })
 		} catch (error: any) {
 			console.log(error.messages)
 		}

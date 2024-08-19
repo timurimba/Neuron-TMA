@@ -1,9 +1,15 @@
 import { CHAIN } from '@tonconnect/protocol'
-import { useTonConnectUI, useTonWallet } from '@tonconnect/ui-react'
-import { Sender, SenderArguments } from 'ton-core'
+import {
+	SendTransactionResponse,
+	useTonConnectUI,
+	useTonWallet
+} from '@tonconnect/ui-react'
+import { SenderArguments } from 'ton-core'
 
 export function useWallet(): {
-	sender: Sender
+	sender: {
+		send: (args: SenderArguments) => Promise<SendTransactionResponse>
+	}
 	connected: boolean
 	wallet: string | null
 	network: CHAIN | null
@@ -13,7 +19,7 @@ export function useWallet(): {
 	return {
 		sender: {
 			send: async (args: SenderArguments) => {
-				tonConnectUI.sendTransaction({
+				return await tonConnectUI.sendTransaction({
 					messages: [
 						{
 							address: args.to.toString(),
