@@ -1,4 +1,5 @@
 import { get, ref, update } from 'firebase/database'
+import { Address } from 'ton-core'
 
 import { IUser } from '@/types/user.types'
 
@@ -27,7 +28,7 @@ export const UserService = {
 			isHadNft: true
 		})
 	},
-	setAddressWallet: async (telegramUserId: string, addressWallet: string) => {
+	setAddressWallet: async (telegramUserId: string, addressWallet: Address) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
 		await update(userRef, {
