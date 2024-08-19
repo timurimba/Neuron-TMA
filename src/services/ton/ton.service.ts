@@ -9,13 +9,6 @@ const tonweb = new TonWeb(
 	new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC')
 )
 
-const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
-const keyPair = await mnemonicToKeyPair(mnemonicParts)
-const WalletClass = tonweb.wallet.all['v4R2']
-const wallet = new WalletClass(tonweb.provider, {
-	publicKey: keyPair.publicKey,
-	wc: 0
-})
 export const TonService = {
 	getBalance: async (walletAddress: string) => {
 		const { data } = await apiBlockchain.get(`/accounts/${walletAddress}`)
@@ -64,6 +57,13 @@ export const TonService = {
 		// 	boc: signedBoc
 
 		// })
+		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
+		const keyPair = await mnemonicToKeyPair(mnemonicParts)
+		const WalletClass = tonweb.wallet.all['v4R2']
+		const wallet = new WalletClass(tonweb.provider, {
+			publicKey: keyPair.publicKey,
+			wc: 0
+		})
 		const nftItem = new TonWeb.token.nft.NftItem(tonweb.provider, {
 			address: nftAddress
 		})
