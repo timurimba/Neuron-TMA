@@ -13,7 +13,7 @@ const BuyNft: FC = () => {
 		<div className={styles.wrapper}>
 			<img src={randomImage} alt='' />
 			<p>
-				PRICE: 0.01 <img className='w-7 h-7' src={tonImage} alt='' />
+				PRICE: 6 <img className='w-7 h-7' src={tonImage} alt='' />
 			</p>
 			<Button onClick={buyNft}>buy</Button>
 		</div>
