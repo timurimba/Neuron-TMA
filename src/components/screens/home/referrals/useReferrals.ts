@@ -5,12 +5,13 @@ import { UserService } from '@/services/user/user.service'
 export const useRefferals = () => {
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['get-user'],
-		queryFn: () => UserService.getUser('728888992')
+		queryFn: () =>
+			UserService.getUser(`${window.Telegram.WebApp.initDataUnsafe.user!.id}`)
 	})
 
 	const inviteFriend = () => {
 		window.open(
-			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/TestJokino_bot?start=728888992`)}`,
+			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/TestJokino_bot?start=${window.Telegram.WebApp.initDataUnsafe.user!.id}`)}`,
 			'_blank'
 		)
 	}

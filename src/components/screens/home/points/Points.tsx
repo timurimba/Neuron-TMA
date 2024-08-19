@@ -12,8 +12,11 @@ import { useTimerStore } from '@/store/store'
 const Points: FC = () => {
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['get-user'],
-		queryFn: () => UserService.getUser(telegramId)
+		queryFn: () =>
+			UserService.getUser(`${window.Telegram.WebApp.initDataUnsafe.user!.id}`)
 	})
+
+	console.log(telegramId)
 
 	const { points } = useTimerStore(state => state)
 

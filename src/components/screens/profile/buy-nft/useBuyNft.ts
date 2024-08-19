@@ -6,8 +6,6 @@ import { TonService } from '@/services/ton/ton.service'
 
 import { useWallet } from '@/hooks/useWallet'
 
-import { telegramId } from '@/consts/consts'
-
 const images: any = import.meta.glob('@/assets/images/nft/*.png', {
 	eager: true
 })
@@ -23,7 +21,11 @@ export const useBuyNft = () => {
 	const { mutate: transferNft } = useMutation({
 		mutationKey: ['transfer-nft'],
 		mutationFn: (data: { wallet: string; randomNftAddress: string }) =>
-			TonService.transferNft(data.wallet, data.randomNftAddress, telegramId)
+			TonService.transferNft(
+				data.wallet,
+				data.randomNftAddress,
+				`${window.Telegram.WebApp.initDataUnsafe.user!.id}`
+			)
 	})
 
 	const { sender, wallet } = useWallet()
