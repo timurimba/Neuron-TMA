@@ -16,7 +16,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 		mutationFn: (data: { telegramId: string; wallet: Address }) =>
 			UserService.setAddressWallet(data.telegramId, data.wallet)
 	})
-
+	console.log(Address.parse(wallet!))
 	useEffect(() => {
 		if (wallet) {
 			setAddressWallet({
