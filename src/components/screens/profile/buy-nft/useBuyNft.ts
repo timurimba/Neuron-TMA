@@ -32,7 +32,7 @@ export const useBuyNft = () => {
 
 	const buyNft = async () => {
 		try {
-			await sender.send({
+			const tx = await sender.send({
 				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
 				value: toNano(6)
 			})

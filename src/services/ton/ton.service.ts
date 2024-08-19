@@ -3,8 +3,6 @@ import { mnemonicToKeyPair } from 'tonweb-mnemonic'
 
 import { apiBlockchain } from '@/api/api'
 
-import { UserService } from '../user/user.service'
-
 const tonweb = new TonWeb(
 	new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC')
 )
@@ -86,6 +84,5 @@ export const TonService = {
 				sendMode: 3
 			})
 			.send()
-		UserService.setIsHadNft(telegramUserId)
 	}
 }

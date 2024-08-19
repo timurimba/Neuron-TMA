@@ -15,7 +15,9 @@ const BuyNft: FC = () => {
 			<p>
 				PRICE: 6 <img className='w-7 h-7' src={tonImage} alt='' />
 			</p>
-			<Button onClick={buyNft}>buy</Button>
+			<Button disabled onClick={buyNft}>
+				buy
+			</Button>
 		</div>
 	)
 }
