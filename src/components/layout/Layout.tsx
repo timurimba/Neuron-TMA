@@ -13,15 +13,16 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 	const { wallet } = useWallet()
 	const { mutate: setAddressWallet } = useMutation({
 		mutationKey: ['set-address-wallet'],
-		mutationFn: (data: { telegramId: string; wallet: Address }) =>
+		mutationFn: (data: { telegramId: string; wallet: string }) =>
 			UserService.setAddressWallet(data.telegramId, data.wallet)
 	})
-	console.log(Address.parse(wallet!))
+
 	useEffect(() => {
 		if (wallet) {
+			console.log(Address.parse(wallet))
 			setAddressWallet({
 				telegramId: `${window.Telegram.WebApp.initDataUnsafe.user?.id}`,
-				wallet: Address.parse(wallet)
+				wallet
 			})
 		}
 	}, [wallet])
