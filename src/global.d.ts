@@ -74,5 +74,6 @@ interface Telegram {
 }
 
 interface Window {
+	isPageReloading: boolean
 	Telegram: Telegram
 }

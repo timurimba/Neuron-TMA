@@ -27,16 +27,31 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 	}, [wallet])
 
 	useEffect(() => {
+		const handleBeforeUnload = () => {
+			// Флаг для определения, что страница обновляется
+			window.isPageReloading = true
+		}
+
+		const handleUnload = () => {
+			// Сбрасываем флаг после завершения обновления
+			window.isPageReloading = false
+		}
+
 		const handlerCloseApp = () => {
 			if (document.hidden) {
-				window.Telegram.WebApp.close()
+				if (!window.isPageReloading) window.Telegram.WebApp.close()
 			}
 		}
 
 		document.addEventListener('visibilitychange', handlerCloseApp)
+		window.addEventListener('beforeUnload', handleBeforeUnload)
+		window.addEventListener('unload', handleUnload)
 
-		return () =>
+		return () => {
 			document.removeEventListener('visibilitychange', handlerCloseApp)
+			window.removeEventListener('beforeUnload', handlerCloseApp)
+			window.removeEventListener('unload', handlerCloseApp)
+		}
 	}, [])
 
 	return (
