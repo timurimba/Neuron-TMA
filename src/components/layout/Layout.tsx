@@ -26,6 +26,19 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}, [wallet])
 
+	useEffect(() => {
+		const handlerCloseApp = () => {
+			if (document.hidden) {
+				window.Telegram.WebApp.close()
+			}
+		}
+
+		document.addEventListener('visibilitychange', handlerCloseApp)
+
+		return () =>
+			document.removeEventListener('visibilitychange', handlerCloseApp)
+	}, [])
+
 	return (
 		<>
 			<Header />
