@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMemo } from 'react'
+import { Cell, toNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
@@ -27,35 +28,35 @@ export const useBuyNft = () => {
 
 	const buyNft = async () => {
 		try {
-			// const tx = await sender.send({
-			// 	to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-			// 	value: toNano(6)
-			// })
-
-			// const binaryData = Buffer.from(tx.boc, 'base64')
-			// const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
-			// let isSuccess = false
-
-			// await new Promise(resolve => {
-			// 	setTimeout(async () => {
-			// 		isSuccess = await TonService.getTransaction(transactionId)
-			// 		resolve(null)
-			// 	}, 30000)
-			// })
-
-			// if (isSuccess) {
-
-			// }
-			const availableNfts = await TonService.getNfts(
-				import.meta.env.VITE_OWNER_WALLET_ADDRESS
-			)
-
-			const randomNftAddress =
-				availableNfts[Math.floor(Math.random() * availableNfts.length)].address
-			transferNft({
-				wallet: wallet!,
-				randomNftAddress
+			const tx = await sender.send({
+				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
+				value: toNano(6)
 			})
+
+			const binaryData = Buffer.from(tx.boc, 'base64')
+			const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
+			let isSuccess = false
+
+			await new Promise(resolve => {
+				setTimeout(async () => {
+					isSuccess = await TonService.getTransaction(transactionId)
+					resolve(null)
+				}, 30000)
+			})
+
+			if (isSuccess) {
+				const availableNfts = await TonService.getNfts(
+					import.meta.env.VITE_OWNER_WALLET_ADDRESS
+				)
+
+				const randomNftAddress =
+					availableNfts[Math.floor(Math.random() * availableNfts.length)]
+						.address
+				transferNft({
+					wallet: wallet!,
+					randomNftAddress
+				})
+			}
 		} catch (error: any) {
 			console.log(error.messages)
 		}
