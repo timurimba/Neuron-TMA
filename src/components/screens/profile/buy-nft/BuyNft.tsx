@@ -8,14 +8,14 @@ import styles from './BuyNft.module.scss'
 import { useBuyNft } from './useBuyNft'
 
 const BuyNft: FC = () => {
-	const { randomImage } = useBuyNft()
+	const { randomImage, buyNft } = useBuyNft()
 	return (
 		<div className={styles.wrapper}>
 			<img src={randomImage} alt='' />
 			<p>
 				PRICE: 6 <img className='w-7 h-7' src={tonImage} alt='' />
 			</p>
-			<Button disabled>buy</Button>
+			<Button onClick={buyNft}>buy</Button>
 		</div>
 	)
 }

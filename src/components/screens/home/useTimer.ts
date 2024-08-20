@@ -41,9 +41,19 @@ export const useTimer = () => {
 
 			if (user.timer && user.timer.isProcessing && user.timer.value > 0) {
 				const timeLeft = Date.now() - user.timer.exitTime
+
 				const timerValue = Math.floor(user.timer.value - timeLeft / 1000)
-				const points =
-					user.points + (user.isHadHft ? 0.01 : 0.002 * (timeLeft / 1000))
+
+				let points = 0
+
+				if (timeLeft / 1000 >= 1) {
+					points = user.isHadHft
+						? user.points + 0.01 * (timeLeft / 1000)
+						: user.points + 0.002 * (timeLeft / 1000)
+				} else {
+					points = user.isHadHft ? user.points + 0.01 : user.points + 0.002
+				}
+
 				intervalId = setInterval(async () => {
 					update(userRef, {
 						timer: {
