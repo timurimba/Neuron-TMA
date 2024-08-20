@@ -3,4 +3,28 @@
 	background-color: rgba(0, 0, 0, 0.05);
 	backdrop-filter: blur(1px);
 	box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+	> a {
+		@apply w-10 h-10 flex items-center border-transparent border border-solid justify-center p-1 rounded-full transition-all duration-300 ease-linear;
+		&.active {
+			animation: pulse 2s infinite;
+		}
+	}
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+		border-color: #666;
+		background-color: #f0f0f0;
+	}
+	50% {
+		box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+		border-color: #444;
+		background-color: #d0d0d0;
+	}
+	100% {
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+		border-color: #666;
+		background-color: #f0f0f0;
+	}
 }

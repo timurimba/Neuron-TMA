@@ -30,6 +30,17 @@ export const TonService = {
 	},
 
 	transferNft: async (newOwnerAddress: string, nftAddress: string) => {
+		// const boc = beginCell()
+		// 	.storeUint(0x5fcc3d14, 32) // NFT transfer op code 0x5fcc3d14
+		// 	.storeUint(0, 64) // query_id:uint64
+		// 	.storeAddress(Address.parse(newOwnerAddress)) // new_owner:MsgAddress
+		// 	.storeAddress(Address.parse(newOwnerAddress)) // response_destination:MsgAddress
+		// 	.storeUint(0, 1) // custom_payload:(Maybe ^Cell)
+		// 	.storeCoins(toNano(0.000000001)) // forward_amount:(VarUInteger 16)
+		// 	.storeUint(0, 1) // forward_payload:(Either Cell ^Cell)
+		// 	.endCell()
+		// 	.toBoc()
+
 		// const messageBody = beginCell()
 		// 	.storeUint(0x5fcc3d14, 32) // Op_code
 		// 	.storeAddress(Address.parse(newOwnerAddress)) // Новый владелец
@@ -49,9 +60,12 @@ export const TonService = {
 		// const { secretKey } = await mnemonicToKeyPair(
 		// 	import.meta.env.VITE_MNEMONIC.split(' ')
 		// )
-		// const signedBoc = Buffer.from(sign(boc, Buffer.from(secretKey))).toString(
+
+		// const signedBoc = sign(boc, Buffer.from(secretKey)).toString('base64')
+
 		// 	'base64'
 		// )
+
 		// return await apiBlockchain.post('/blockchain/message', {
 		// 	boc: signedBoc
 		// })
