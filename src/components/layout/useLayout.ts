@@ -89,10 +89,10 @@ export const useLayout = () => {
 		const points = localStorage.getItem('points')
 		const durationExit = localStorage.getItem('durationExit')
 
-		if (points && durationExit) {
-			UserService.updatePoints(telegramId, Number(points))
-			UserService.setDurationExit(telegramId, Number(durationExit))
-		}
+		// if (points && durationExit) {
+		// 	UserService.updatePoints(telegramId, Number(points))
+		// 	UserService.setDurationExit(telegramId, Number(durationExit))
+		// }
 
 		if (intervalId) {
 			clearInterval(intervalId)
