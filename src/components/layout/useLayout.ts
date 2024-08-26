@@ -37,6 +37,27 @@ export const useLayout = () => {
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
 	})
 
+	useEffect(() => {
+		if (wallet && user && !user.isHadNft) {
+			const seeIfThereIsNft = async () => {
+				mutateAddressWallet({
+					telegramId,
+					wallet: Address.parse(wallet).toString()
+				})
+				const nfts = await TonService.getNfts(wallet)
+				if (nfts.length) {
+					mutateIsHadNft(telegramId)
+					clearInterval(intervalId!)
+
+					restartIntervalWhenIsHadNft()
+				}
+			}
+			seeIfThereIsNft()
+		}
+	}, [wallet, user])
+
+	useEffect(() => {}, [])
+
 	const { mutate: mutateStopTimer } = useMutation({
 		mutationKey: ['stop-timer'],
 		mutationFn: (telegramId: string) => UserService.stopTimer(telegramId),
@@ -66,25 +87,6 @@ export const useLayout = () => {
 			}
 		})
 	}, [])
-
-	useEffect(() => {
-		if (wallet && user && !user.isHadNft) {
-			const seeIfThereIsNft = async () => {
-				mutateAddressWallet({
-					telegramId,
-					wallet: Address.parse(wallet).toString()
-				})
-				const nfts = await TonService.getNfts(wallet)
-				if (nfts.length) {
-					mutateIsHadNft(telegramId)
-					clearInterval(intervalId!)
-
-					restartIntervalWhenIsHadNft()
-				}
-			}
-			seeIfThereIsNft()
-		}
-	}, [wallet, user])
 
 	useEffect(() => {
 		if (intervalId) {
@@ -137,6 +139,7 @@ export const useLayout = () => {
 			} else {
 				setTimer(user.timer.duration)
 				setPoints(user.points)
+				localStorage.setItem('test', 'From LocalStorage')
 			}
 		}
 	}, [user])

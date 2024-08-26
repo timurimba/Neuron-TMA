@@ -67,6 +67,12 @@ interface TelegramWebApp {
 	offEvent(eventType: string, callback: () => void): void
 	sendData(data: string): void
 	close(): void
+	storage: {
+		setItem(key: string, value: any): void
+		getItem(key): void
+		removeItem(key): void
+		clear(): void
+	}
 }
 
 interface Telegram {
