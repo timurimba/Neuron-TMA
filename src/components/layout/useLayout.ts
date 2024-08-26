@@ -48,7 +48,7 @@ export const useLayout = () => {
 	})
 
 	useEffect(() => {
-		window.addEventListener('unload', () => {
+		window.addEventListener('beforeunload', () => {
 			const safePoints = JSON.stringify({
 				telegramId,
 				points: usePointsStore.getState().points
