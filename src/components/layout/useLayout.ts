@@ -140,6 +140,7 @@ export const useLayout = () => {
 			} else {
 				setTimer(user.timer.duration)
 				setPoints(user.points)
+				localStorage.clear()
 			}
 		}
 	}, [user])
