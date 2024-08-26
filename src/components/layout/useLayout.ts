@@ -85,7 +85,10 @@ export const useLayout = () => {
 			// 		safeDurationExit
 			// 	)
 			// }
-			localStorage.setItem('test', 'From Local Storage Unload')
+			window.Telegram.WebApp.storage.setItem(
+				'test',
+				'From Local Storage Unload'
+			)
 		})
 	}, [])
 

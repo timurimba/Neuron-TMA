@@ -69,7 +69,7 @@ interface TelegramWebApp {
 	close(): void
 	storage: {
 		setItem(key: string, value: any): void
-		getItem(key): void
+		getItem(key): string
 		removeItem(key): void
 		clear(): void
 	}
