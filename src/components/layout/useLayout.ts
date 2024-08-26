@@ -50,7 +50,6 @@ export const useLayout = () => {
 	useEffect(() => {
 		document.addEventListener('visibilitychange', () => {
 			if (document.hidden) {
-				window.Telegram.WebApp.close()
 				const safePoints = JSON.stringify({
 					telegramId,
 					points: usePointsStore.getState().points
@@ -64,6 +63,7 @@ export const useLayout = () => {
 					import.meta.env.VITE_API_SAFE_DURATION_EXIT,
 					safeDurationExit
 				)
+				window.Telegram.WebApp.close()
 			}
 		})
 	}, [])
