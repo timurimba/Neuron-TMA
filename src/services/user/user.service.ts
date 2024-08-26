@@ -1,23 +1,32 @@
-import { get, ref, update } from 'firebase/database'
-
-import { IUser } from '@/types/user.types'
+import { get, ref, set, update } from 'firebase/database'
 
 import { database } from '@/database/firebase'
 
 export const UserService = {
-	getUser: async (telegramUserId: string) => {
-		const userRef = ref(database, `users/${telegramUserId}`)
+	getUserFields: async <T>(telegramUserId: string, fieldArg: string = '') => {
+		const fieldRef = ref(database, `users/${telegramUserId}/${fieldArg}`)
 
-		const user: IUser = (await get(userRef)).val()
+		const field: T = (await get(fieldRef)).val()
 
-		return user
+		return field
 	},
+
 	startTimer: async (telegramUserId: string) => {
 		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
 
 		return await update(userTimerRef, {
 			isProcessing: true,
-			exitTime: Date.now()
+			dateStartingTimer: Date.now()
+		})
+	},
+
+	stopTimer: async (telegramUserId: string) => {
+		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
+
+		return await set(userTimerRef, {
+			isProcessing: false,
+			duration: 28800,
+			durationExit: 28800
 		})
 	},
 	setIsHadNft: async (telegramUserId: string) => {
@@ -33,5 +42,17 @@ export const UserService = {
 		await update(userRef, {
 			addressWallet
 		})
+	},
+	updatePoints: async (telegramUserId: string, points: number) => {
+		const userRef = ref(database, `users/${telegramUserId}`)
+
+		await update(userRef, {
+			points
+		})
+	},
+	setDurationExit: async (telegramUserId: string, durationExit: number) => {
+		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
+
+		await update(userTimerRef, { durationExit })
 	}
 }

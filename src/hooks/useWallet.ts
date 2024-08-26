@@ -1,10 +1,10 @@
+import { SenderArguments } from '@ton/core'
 import { CHAIN } from '@tonconnect/protocol'
 import {
 	SendTransactionResponse,
 	useTonConnectUI,
 	useTonWallet
 } from '@tonconnect/ui-react'
-import { SenderArguments } from 'ton-core'
 
 export function useWallet(): {
 	sender: {

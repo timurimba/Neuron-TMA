@@ -1,13 +1,19 @@
-import type { FC } from 'react';
+import type { FC } from 'react'
 
-import Layout from '@/components/layout/Layout';
+import s from './Tasks.module.scss'
 
 const Tasks: FC = () => {
 	return (
-		<Layout>
-			<h1 className='text-center font-bold mt-10'>Soon...</h1>
-		</Layout>
-	);
-};
+		<div className={s.root}>
+			<span className={s.title}>Tasks</span>
+			<div className={s.plug}>
+				<div className={s.plug__inner}>
+					<span className={s.text}>Custom</span> <br />
+					<span className={s.description}>coming soon</span>
+				</div>
+			</div>
+		</div>
+	)
+}
 
-export default Tasks;
+export default Tasks

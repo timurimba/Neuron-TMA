@@ -1,22 +1,31 @@
+import { useQuery } from '@tanstack/react-query'
 import { type FC } from 'react'
 
+import { UserService } from '@/services/user/user.service'
+
+import { IUser } from '@/types/user.types'
+
 import styles from './ProgressBar.module.scss'
+import { telegramId } from '@/consts/consts'
 import { useTimerStore } from '@/store/store'
 import { formatTime } from '@/utils/format-time.utils'
 
 const ProgressBar: FC = () => {
-	const { timerValue } = useTimerStore(state => state)
+	const { timer } = useTimerStore()
+	const { data: user } = useQuery({
+		queryKey: ['get-user'],
+		queryFn: () => UserService.getUserFields<IUser>(telegramId)
+	})
+
 	return (
 		<div className={styles.progress}>
 			<div>
 				<div
 					style={{
-						width: `${timerValue.length ? (Number(timerValue) / 28800) * 100 : 0}%`
+						width: `${timer ? (timer / user!.timer.duration) * 100 : 0}%`
 					}}
 				/>
-				<span>
-					{timerValue.length ? formatTime(Number(timerValue)) : 'Loading..'}
-				</span>
+				<span>{timer ? formatTime(timer) : 'Loading..'}</span>
 			</div>
 		</div>
 	)

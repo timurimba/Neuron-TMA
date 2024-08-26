@@ -1,40 +1,22 @@
-import { useMutation } from '@tanstack/react-query'
-import { type FC, type PropsWithChildren, useEffect } from 'react'
-import { Address } from 'ton-core'
-
-import { UserService } from '@/services/user/user.service'
-
-import { useWallet } from '@/hooks/useWallet'
+import { type FC, type PropsWithChildren } from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 import Header from './header/Header'
 import Footer from './navigation/Navigation'
+import { useLayout } from './useLayout'
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
-	const { wallet } = useWallet()
-	const { mutate: setAddressWallet } = useMutation({
-		mutationKey: ['set-address-wallet'],
-		mutationFn: (data: { telegramId: string; wallet: string }) =>
-			UserService.setAddressWallet(data.telegramId, data.wallet)
-	})
-
-	useEffect(() => {
-		if (wallet) {
-			setAddressWallet({
-				telegramId: `${window.Telegram.WebApp.initDataUnsafe.user?.id}`,
-				wallet: Address.parse(wallet).toString()
-			})
-		}
-	}, [wallet])
+	useLayout()
 
 	return (
-		<>
+		<Router>
 			<Header />
 			<div className='mx-5'>
 				{children}
 				<div className='h-[150px]'></div>
 			</div>
 			<Footer />
-		</>
+		</Router>
 	)
 }
 

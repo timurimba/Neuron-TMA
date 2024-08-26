@@ -1,3 +1,5 @@
+import { Address, beginCell, external, storeMessage, toNano } from '@ton/core'
+import { sign } from 'ton-crypto'
 import TonWeb from 'tonweb'
 import { mnemonicToKeyPair } from 'tonweb-mnemonic'
 
@@ -29,55 +31,52 @@ export const TonService = {
 		return data.nft_items.length
 	},
 
-	transferNft: async (newOwnerAddress: string, nftAddress: string) => {
-		// const boc = beginCell()
-		// 	.storeUint(0x5fcc3d14, 32) // NFT transfer op code 0x5fcc3d14
-		// 	.storeUint(0, 64) // query_id:uint64
-		// 	.storeAddress(Address.parse(newOwnerAddress)) // new_owner:MsgAddress
-		// 	.storeAddress(Address.parse(newOwnerAddress)) // response_destination:MsgAddress
-		// 	.storeUint(0, 1) // custom_payload:(Maybe ^Cell)
-		// 	.storeCoins(toNano(0.000000001)) // forward_amount:(VarUInteger 16)
-		// 	.storeUint(0, 1) // forward_payload:(Either Cell ^Cell)
-		// 	.endCell()
-		// 	.toBoc()
+	transferNft: async (newOwnerAddress: string, nftContractAddress: string) => {
+		const payload = beginCell()
+			.storeUint(0x5fcc3d14, 32) // selector для transfer
+			.storeUint(0, 64) // query_id
+			.storeAddress(Address.parse(nftContractAddress))
+			.storeAddress(Address.parse(newOwnerAddress)) // Адрес получателя
+			.storeAddress(Address.parse(import.meta.env.VITE_OWNER_WALLET_ADDRESS)) // Адрес отправителя (оставляется для обработки)
+			.storeAddress(null) // forward_payload - в данном случае пустой
+			.storeBit(0) // forward_fee - 0
+			.storeCoins(toNano(0)) // forward_amount - 0
+			.endCell()
 
-		// const messageBody = beginCell()
-		// 	.storeUint(0x5fcc3d14, 32) // Op_code
-		// 	.storeAddress(Address.parse(newOwnerAddress)) // Новый владелец
-		// 	.storeAddress(Address.parse(newOwnerAddress)) // Адрес для ответа
-		// 	.storeUint(0, 1) // Custom payload (0 в данном случае)
-		// 	.storeCoins(toNano('0.01')) // Сумма, которая будет отправлена новому владельцу
-		// 	.endCell()
+		const externalMessage = beginCell()
+			.store(
+				storeMessage(
+					external({
+						to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
+						body: payload
+					})
+				)
+			)
+			.endCell()
+			.toBoc()
 
-		// const boc = beginCell()
-		// 	.storeUint(0, 1) // Флаг ответа
-		// 	.storeAddress(Address.parse(nftAddress)) // Адрес контракта NFT
-		// 	.storeCoins(toNano('0.05')) // Сумма отправляемая контракту
-		// 	.storeRef(messageBody) // Ссылка на тело сообщения
-		// 	.endCell()
-		// 	.toBoc()
-
-		// const { secretKey } = await mnemonicToKeyPair(
-		// 	import.meta.env.VITE_MNEMONIC.split(' ')
-		// )
-
-		// const signedBoc = sign(boc, Buffer.from(secretKey)).toString('base64')
-
-		// 	'base64'
-		// )
-
-		// return await apiBlockchain.post('/blockchain/message', {
-		// 	boc: signedBoc
-		// })
 		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
 		const keyPair = await mnemonicToKeyPair(mnemonicParts)
+
+		const signature = sign(externalMessage, Buffer.from(keyPair.secretKey))
+
+		const signedExternalMessage = beginCell()
+			.storeBuffer(signature)
+			.storeBuffer(externalMessage)
+			.endCell()
+			.toBoc()
+			.toString('base64')
+		await apiBlockchain.post('/blockchain/message', {
+			boc: signedExternalMessage
+		})
+
 		const WalletClass = tonweb.wallet.all['v4R2']
 		const wallet = new WalletClass(tonweb.provider, {
 			publicKey: keyPair.publicKey,
 			wc: 0
 		})
 		const nftItem = new TonWeb.token.nft.NftItem(tonweb.provider, {
-			address: nftAddress
+			address: nftContractAddress
 		})
 		const seqno = parseInt(String(await wallet.methods.seqno().call())) || 0
 		const amount = TonWeb.utils.toNano('0.02')
@@ -86,7 +85,7 @@ export const TonService = {
 		await wallet.methods
 			.transfer({
 				secretKey: keyPair.secretKey,
-				toAddress: nftAddress,
+				toAddress: nftContractAddress,
 				amount: amount,
 				seqno: seqno,
 				payload: await nftItem.createTransferBody({
