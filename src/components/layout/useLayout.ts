@@ -69,22 +69,23 @@ export const useLayout = () => {
 	})
 
 	useEffect(() => {
-		document.addEventListener('visibilitychange', () => {
-			if (document.hidden) {
-				const safePoints = JSON.stringify({
-					telegramId,
-					points: usePointsStore.getState().points
-				})
-				const safeDurationExit = JSON.stringify({
-					telegramId,
-					durationExit: useTimerStore.getState().timer
-				})
-				navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
-				navigator.sendBeacon(
-					import.meta.env.VITE_API_SAFE_DURATION_EXIT,
-					safeDurationExit
-				)
-			}
+		window.addEventListener('unload', () => {
+			// if (document.hidden) {
+			// 	const safePoints = JSON.stringify({
+			// 		telegramId,
+			// 		points: usePointsStore.getState().points
+			// 	})
+			// 	const safeDurationExit = JSON.stringify({
+			// 		telegramId,
+			// 		durationExit: useTimerStore.getState().timer
+			// 	})
+			// 	navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
+			// 	navigator.sendBeacon(
+			// 		import.meta.env.VITE_API_SAFE_DURATION_EXIT,
+			// 		safeDurationExit
+			// 	)
+			// }
+			localStorage.setItem('test', 'From Local Storage')
 		})
 	}, [])
 
@@ -139,7 +140,6 @@ export const useLayout = () => {
 			} else {
 				setTimer(user.timer.duration)
 				setPoints(user.points)
-				localStorage.setItem('test', 'From LocalStorage')
 			}
 		}
 	}, [user])
