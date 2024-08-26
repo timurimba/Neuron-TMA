@@ -48,23 +48,20 @@ export const useLayout = () => {
 	})
 
 	useEffect(() => {
-		document.addEventListener('visibilitychange', () => {
-			if (document.hidden) {
-				const safePoints = JSON.stringify({
-					telegramId,
-					points: usePointsStore.getState().points
-				})
-				const safeDurationExit = JSON.stringify({
-					telegramId,
-					durationExit: useTimerStore.getState().timer
-				})
-				navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
-				navigator.sendBeacon(
-					import.meta.env.VITE_API_SAFE_DURATION_EXIT,
-					safeDurationExit
-				)
-				window.Telegram.WebApp.close()
-			}
+		window.addEventListener('beforeunload', () => {
+			const safePoints = JSON.stringify({
+				telegramId,
+				points: usePointsStore.getState().points
+			})
+			const safeDurationExit = JSON.stringify({
+				telegramId,
+				durationExit: useTimerStore.getState().timer
+			})
+			navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
+			navigator.sendBeacon(
+				import.meta.env.VITE_API_SAFE_DURATION_EXIT,
+				safeDurationExit
+			)
 		})
 	}, [])
 
