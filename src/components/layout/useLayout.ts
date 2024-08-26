@@ -87,7 +87,7 @@ export const useLayout = () => {
 
 	useEffect(() => {
 		const points = localStorage.getItem('points')
-		const durationExit = localStorage.getItem('points')
+		const durationExit = localStorage.getItem('durationExit')
 
 		if (points && durationExit) {
 			UserService.updatePoints(telegramId, Number(points))
