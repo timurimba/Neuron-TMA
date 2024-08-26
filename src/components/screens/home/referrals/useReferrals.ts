@@ -2,12 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 
 import { UserService } from '@/services/user/user.service'
 
+import { IUser } from '@/types/user.types'
+
 import { telegramId } from '@/consts/consts'
 
 export const useRefferals = () => {
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['get-user'],
-		queryFn: () => UserService.getUser(telegramId)
+		queryFn: () => UserService.getUserFields<IUser>(telegramId)
 	})
 
 	const inviteFriend = () => {
