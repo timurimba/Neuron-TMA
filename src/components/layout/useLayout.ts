@@ -85,7 +85,7 @@ export const useLayout = () => {
 			// 		safeDurationExit
 			// 	)
 			// }
-			localStorage.setItem('test', 'From Local Storage')
+			localStorage.setItem('test', 'From Local Storage Unload')
 		})
 	}, [])
 
