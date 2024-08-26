@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.23",
+    "@ton/core": "^0.57.0",
     "@tonconnect/ui-react": "^2.0.9",
     "axios": "^1.7.4",
     "clsx": "^2.1.1",

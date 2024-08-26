@@ -6,6 +6,10 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	user-select: none; /* Стандартное свойство для предотвращения выделения текста */
+	-webkit-user-select: none; /* Для WebKit-браузеров (например, Safari) */
+	-moz-user-select: none; /* Для Mozilla Firefox */
+	-ms-user-select: none; /* Для Internet Explorer/Edge */
 }
 
 body,

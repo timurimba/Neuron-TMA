@@ -1,11 +1,13 @@
-interface ITimer {
+export interface ITimer {
 	isProcessing: boolean
-	value: number
-	exitTime: number
+	duration: number
+	durationExit: number
+	dateStartingTimer: number
 }
 
 export interface IUser {
 	points: number
 	referrals: number[]
 	timer: ITimer
+	isHadNft: boolean
 }

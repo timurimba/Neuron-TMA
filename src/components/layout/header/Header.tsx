@@ -1,5 +1,5 @@
 import { TonConnectButton } from '@tonconnect/ui-react'
-import type { FC } from 'react'
+import { type FC } from 'react'
 
 import logo from '@/assets/images/logo.png'
 

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
+import { Cell, toNano } from '@ton/core'
 import { useMemo } from 'react'
-import { Cell, toNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
@@ -52,6 +52,7 @@ export const useBuyNft = () => {
 				const randomNftAddress =
 					availableNfts[Math.floor(Math.random() * availableNfts.length)]
 						.address
+
 				transferNft({
 					wallet: wallet!,
 					randomNftAddress

@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC } from 'react'
 
 import Face2 from '@/assets/images/home/face2.png'
 import Face from '@/assets/images/home/face.png'
@@ -16,7 +16,11 @@ const Clicker: FC = () => {
 		<div className={styles.clicker}>
 			<div>
 				<img
-					onClick={() => mutate(telegramId)}
+					onClick={() => {
+						if (!user?.timer.isProcessing) {
+							mutate(telegramId)
+						}
+					}}
 					src={!!user?.timer ? (user.timer.isProcessing ? Face2 : Face) : Face}
 					alt='Face'
 				/>

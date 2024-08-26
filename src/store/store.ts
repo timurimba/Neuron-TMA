@@ -1,15 +1,36 @@
 import { create } from 'zustand'
 
-interface ITimerStore {
+interface IPointsStore {
 	points: number
-	updatePoints: (points: number) => void
-	timerValue: string
-	updateTimerValue: (timerValue: string) => void
+	increasePoints: (coefficient: number) => void
+	setPoints: (points: number) => void
 }
 
-export const useTimerStore = create<ITimerStore>(set => ({
-	timerValue: '',
-	updateTimerValue: timerValue => set(() => ({ timerValue })),
+interface ITimerStore {
+	timer: number
+	decreaseTimer: () => void
+	setTimer: (value: number) => void
+}
+
+interface IIntervalStore {
+	intervalId: NodeJS.Timeout | null
+	setIntervalId: (value: NodeJS.Timeout) => void
+}
+
+export const usePointsStore = create<IPointsStore>(set => ({
 	points: 0,
-	updatePoints: points => set(() => ({ points }))
+	setPoints: points => set(() => ({ points })),
+	increasePoints: coefficient =>
+		set(({ points }) => ({ points: points + coefficient }))
+}))
+
+export const useTimerStore = create<ITimerStore>(set => ({
+	timer: 0,
+	decreaseTimer: () => set(({ timer }) => ({ timer: timer - 1 })),
+	setTimer: value => set(() => ({ timer: value }))
+}))
+
+export const useIntervalStore = create<IIntervalStore>(set => ({
+	intervalId: null,
+	setIntervalId: value => set(() => ({ intervalId: value }))
 }))

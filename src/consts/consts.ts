@@ -1,4 +1,4 @@
-export const telegramId = String(window.Telegram.WebApp.initDataUnsafe.user!.id)
+export const telegramId = String(384432527)
 
 // window.Telegram.WebApp.initDataUnsafe.user!.id
 //384432527
