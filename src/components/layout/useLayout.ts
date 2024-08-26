@@ -48,7 +48,7 @@ export const useLayout = () => {
 	})
 
 	useEffect(() => {
-		window.addEventListener('beforeunload', () => {
+		window.addEventListener('visibilitychange', () => {
 			const safePoints = JSON.stringify({
 				telegramId,
 				points: usePointsStore.getState().points
