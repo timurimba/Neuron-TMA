@@ -63,7 +63,6 @@ export const useLayout = () => {
 					import.meta.env.VITE_API_SAFE_DURATION_EXIT,
 					safeDurationExit
 				)
-				window.Telegram.WebApp.close()
 			}
 		})
 	}, [])
