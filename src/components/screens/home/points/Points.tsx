@@ -13,7 +13,6 @@ const Points: FC = () => {
 			<div>
 				<img src={pointsImg} alt='Points Img' />
 				<span>Neuron Points</span>
-				<span>{window.Telegram.WebApp.storage.getItem('test')}</span>
 			</div>
 			<span>{points?.toFixed(2)}</span>
 		</div>

@@ -71,28 +71,29 @@ export const useLayout = () => {
 	useEffect(() => {
 		window.addEventListener('unload', () => {
 			// if (document.hidden) {
-			// 	const safePoints = JSON.stringify({
-			// 		telegramId,
-			// 		points: usePointsStore.getState().points
-			// 	})
-			// 	const safeDurationExit = JSON.stringify({
-			// 		telegramId,
-			// 		durationExit: useTimerStore.getState().timer
-			// 	})
+			const safePoints = usePointsStore.getState().points
+			const safeDurationExit = useTimerStore.getState().timer
+
 			// 	navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
 			// 	navigator.sendBeacon(
 			// 		import.meta.env.VITE_API_SAFE_DURATION_EXIT,
 			// 		safeDurationExit
 			// 	)
 			// }
-			window.Telegram.WebApp.storage.setItem(
-				'test',
-				'From Local Storage Unload'
-			)
+			localStorage.setItem('points', String(safePoints))
+			localStorage.setItem('durationExit', String(safeDurationExit))
 		})
 	}, [])
 
 	useEffect(() => {
+		const points = localStorage.getItem('points')
+		const durationExit = localStorage.getItem('points')
+
+		if (points && durationExit) {
+			UserService.updatePoints(telegramId, Number(points))
+			UserService.setDurationExit(telegramId, Number(durationExit))
+		}
+
 		if (intervalId) {
 			clearInterval(intervalId)
 		}
@@ -143,7 +144,6 @@ export const useLayout = () => {
 			} else {
 				setTimer(user.timer.duration)
 				setPoints(user.points)
-				localStorage.clear()
 			}
 		}
 	}, [user])
