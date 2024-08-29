@@ -47,14 +47,13 @@ export const useLayout = () => {
 	}, [wallet, user])
 
 	useEffect(() => {
-		document.addEventListener('visibilitychange', () => {
-			if (document.hidden) {
-				clearInterval(intervalId!)
-			} else {
-				queryClient.invalidateQueries({
-					queryKey: ['get-user']
-				})
-			}
+		window.addEventListener('blur', () => {
+			clearInterval(intervalId!)
+		})
+		window.addEventListener('focus', () => {
+			queryClient.invalidateQueries({
+				queryKey: ['get-user']
+			})
 		})
 	}, [])
 
