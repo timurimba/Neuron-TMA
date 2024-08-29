@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 
 export const usePageVisibility = () => {
-	const [isVisible, setIsVisible] = useState(!document.hidden)
+	const [isVisible, setIsVisible] = useState(true)
 
 	useEffect(() => {
-		const handleVisibilityChange = () => {
-			setIsVisible(!document.hidden)
-		}
+		window.addEventListener('blur', () => {
+			setIsVisible(false)
+		})
 
-		document.addEventListener('visibilitychange', handleVisibilityChange)
+		window.addEventListener('focus', () => {
+			setIsVisible(true)
+		})
 	}, [])
 
 	return isVisible
