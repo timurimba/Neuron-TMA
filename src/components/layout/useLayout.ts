@@ -46,6 +46,18 @@ export const useLayout = () => {
 		initIsHadNft()
 	}, [wallet, user])
 
+	useEffect(() => {
+		document.addEventListener('visibilitychange', () => {
+			if (document.hidden) {
+				clearInterval(intervalId!)
+			} else {
+				queryClient.invalidateQueries({
+					queryKey: ['get-user']
+				})
+			}
+		})
+	}, [])
+
 	// useEffect(() => {
 	// 	const initTimer = async () => {
 	// 		const isProcessingTimer = await cloudStorage.get('isProcessingTimer')
