@@ -26,12 +26,10 @@ export const useLayout = () => {
 	// )
 
 	useEffect(() => {
-		if (isVisible === false) {
+		if (!isVisible) {
 			clearInterval(intervalId!)
 		} else {
-			queryClient.invalidateQueries({
-				queryKey: ['get-user']
-			})
+			startInterval(0.01)
 		}
 	}, [isVisible])
 
