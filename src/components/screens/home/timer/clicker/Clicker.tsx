@@ -10,18 +10,21 @@ import { useClicker } from './useClicker'
 import { telegramId } from '@/consts/consts'
 
 const Clicker: FC = () => {
-	const { user, mutate } = useClicker()
+	const { user, mutate, isPending } = useClicker()
+	// const { isProcessingTimer, setIsProcessingTimer } = useIsProcessingTimerStore(
+	// 	state => state
+	// )
 
 	return (
 		<div className={styles.clicker}>
 			<div>
 				<img
 					onClick={() => {
-						if (!user?.timer.isProcessing) {
+						if (!isPending && user && !user.startTimer) {
 							mutate(telegramId)
 						}
 					}}
-					src={!!user?.timer ? (user.timer.isProcessing ? Face2 : Face) : Face}
+					src={user?.startTimer ? Face2 : Face}
 					alt='Face'
 				/>
 				<img src={LeftArm} alt='Left Arm' />

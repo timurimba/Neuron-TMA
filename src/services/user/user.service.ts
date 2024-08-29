@@ -11,15 +11,6 @@ export const UserService = {
 		return field
 	},
 
-	startTimer: async (telegramUserId: string) => {
-		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
-
-		return await update(userTimerRef, {
-			isProcessing: true,
-			dateStartingTimer: Date.now()
-		})
-	},
-
 	stopTimer: async (telegramUserId: string) => {
 		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
 
@@ -50,9 +41,26 @@ export const UserService = {
 			points
 		})
 	},
-	setDurationExit: async (telegramUserId: string, durationExit: number) => {
-		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
+	startTimer: async (telegramUserId: string) => {
+		const userRef = ref(database, `users/${telegramUserId}`)
 
-		await update(userTimerRef, { durationExit })
+		await update(userRef, {
+			startTimer: Date.now(),
+			countDownTime: Date.now()
+		})
+	},
+	resetStartTimer: async (telegramUserId: string) => {
+		const userRef = ref(database, `users/${telegramUserId}`)
+		await update(userRef, {
+			startTimer: 0,
+			countDownTime: 0
+		})
+	},
+	setCountDownTimer: async (telegramUserId: string) => {
+		const userRef = ref(database, `users/${telegramUserId}`)
+
+		await update(userRef, {
+			countDownTime: Date.now()
+		})
 	}
 }

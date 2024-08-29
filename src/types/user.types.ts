@@ -8,6 +8,7 @@ export interface ITimer {
 export interface IUser {
 	points: number
 	referrals: number[]
-	timer: ITimer
+	startTimer: number
+	countDownTime: number
 	isHadNft: boolean
 }

@@ -1,5 +1,6 @@
 import { TonConnectUIProvider } from '@tonconnect/ui-react'
 import type { FC } from 'react'
+import { Toaster } from 'react-hot-toast'
 
 import Layout from './components/layout/Layout'
 import RouterProvider from './providers/router/RouterProvider'
@@ -10,6 +11,7 @@ const App: FC = () => {
 		<TanstackProvider>
 			<TonConnectUIProvider manifestUrl='https://raw.githubusercontent.com/Neuron-project/manifest/main/tonn_manifest.json'>
 				<Layout>
+					<Toaster position='top-center' reverseOrder={false} />
 					<RouterProvider></RouterProvider>
 				</Layout>
 			</TonConnectUIProvider>

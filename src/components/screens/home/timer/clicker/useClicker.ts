@@ -14,7 +14,7 @@ export const useClicker = () => {
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
 	})
 
-	const { mutate } = useMutation({
+	const { mutate, isPending } = useMutation({
 		mutationKey: ['start-timer'],
 		mutationFn: (telegramUserId: string) =>
 			UserService.startTimer(telegramUserId),
@@ -25,5 +25,5 @@ export const useClicker = () => {
 		}
 	})
 
-	return { mutate, user }
+	return { mutate, user, isPending }
 }

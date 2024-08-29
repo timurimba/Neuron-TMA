@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { Address } from '@ton/core'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
@@ -9,142 +8,101 @@ import { queryClient } from '@/providers/tanstack/TanstackProvider'
 
 import { IUser } from '@/types/user.types'
 
+import { useStartInterval } from '@/hooks/useStartInterval'
 import { useWallet } from '@/hooks/useWallet'
 
-import { telegramId } from '@/consts/consts'
-import { restartIntervalWhenIsHadNft } from '@/helpers/helper'
+import { DURATION_TIMER, telegramId } from '@/consts/consts'
 import { useIntervalStore, usePointsStore, useTimerStore } from '@/store/store'
 
 export const useLayout = () => {
 	const { wallet } = useWallet()
 
-	const { mutate: mutateAddressWallet } = useMutation({
-		mutationKey: ['set-address-wallet'],
-		mutationFn: (data: { telegramId: string; wallet: string }) =>
-			UserService.setAddressWallet(data.telegramId, data.wallet)
-	})
+	const { setTimer } = useTimerStore(state => state)
+	const { setPoints } = usePointsStore(state => state)
+	// const { isProcessingTimer, setIsProcessingTimer } = useIsProcessingTimerStore(
+	// 	state => state
+	// )
 
-	const { mutate: mutateIsHadNft } = useMutation({
-		mutationKey: ['set-is-had-nft'],
-		mutationFn: (telegramId: string) => UserService.setIsHadNft(telegramId)
-	})
-
-	const { intervalId, setIntervalId } = useIntervalStore(state => state)
-	const { setTimer, decreaseTimer } = useTimerStore()
-	const { setPoints, increasePoints } = usePointsStore()
+	const { startInterval } = useStartInterval()
+	const { intervalId } = useIntervalStore(state => state)
 	const { data: user } = useQuery({
 		queryKey: ['get-user'],
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
 	})
 
 	useEffect(() => {
-		if (wallet && user && !user.isHadNft) {
-			const seeIfThereIsNft = async () => {
-				mutateAddressWallet({
-					telegramId,
-					wallet: Address.parse(wallet).toString()
-				})
+		const initIsHadNft = async () => {
+			if (wallet && user && user.startTimer && !user.isHadNft) {
 				const nfts = await TonService.getNfts(wallet)
 				if (nfts.length) {
-					mutateIsHadNft(telegramId)
+					UserService.setIsHadNft(telegramId)
+					UserService.setCountDownTimer(telegramId)
+					UserService.updatePoints(telegramId, usePointsStore.getState().points)
 					clearInterval(intervalId!)
-
-					restartIntervalWhenIsHadNft()
+					startInterval(0.01)
 				}
 			}
-			seeIfThereIsNft()
 		}
+		initIsHadNft()
 	}, [wallet, user])
 
-	useEffect(() => {}, [])
+	// useEffect(() => {
+	// 	const initTimer = async () => {
+	// 		const isProcessingTimer = await cloudStorage.get('isProcessingTimer')
 
-	const { mutate: mutateStopTimer } = useMutation({
-		mutationKey: ['stop-timer'],
-		mutationFn: (telegramId: string) => UserService.stopTimer(telegramId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ['get-user']
-			})
-		}
-	})
+	// 		if (!!isProcessingTimer) {
+	// 			setIsProcessingTimer(true)
+	// 		}
+	// 	}
 
-	useEffect(() => {
-		window.addEventListener('unload', () => {
-			// if (document.hidden) {
-			const safePoints = usePointsStore.getState().points
-			const safeDurationExit = useTimerStore.getState().timer
-
-			// 	navigator.sendBeacon(import.meta.env.VITE_API_SAFE_POINTS, safePoints)
-			// 	navigator.sendBeacon(
-			// 		import.meta.env.VITE_API_SAFE_DURATION_EXIT,
-			// 		safeDurationExit
-			// 	)
-			// }
-			localStorage.setItem('points', String(safePoints))
-			localStorage.setItem('durationExit', String(safeDurationExit))
-		})
-	}, [])
+	// 	initTimer()
+	// }, [])
 
 	useEffect(() => {
-		const points = Number(localStorage.getItem('points'))
-		const durationExit = Number(localStorage.getItem('durationExit'))
-
-		if (points && durationExit) {
-			UserService.updatePoints(telegramId, Number(points))
-			UserService.setDurationExit(telegramId, Number(durationExit))
-		}
-
-		if (intervalId) {
-			clearInterval(intervalId)
-		}
-
+		clearInterval(intervalId!)
 		if (user) {
-			if (user.timer.isProcessing) {
-				const pastTimeForTimer = Math.min(
-					Math.floor((Date.now() - user.timer.dateStartingTimer) / 1000),
-					user.timer.duration
-				)
+			if (user.startTimer) {
+				const init = () => {
+					const elapsedTime = Math.floor(
+						Math.min((Date.now() - user.startTimer) / 1000, DURATION_TIMER)
+					)
 
-				const remainingTime = user.timer.duration - pastTimeForTimer
+					const remainingTime = DURATION_TIMER - elapsedTime
 
-				const pastTimeForPoints =
-					user.timer.duration -
-					remainingTime -
-					(user.timer.duration - user.timer.durationExit)
+					const remainingTimeCountDownTime =
+						DURATION_TIMER * 1000 - (user.startTimer - user.countDownTime)
 
-				const points = user.isHadNft
-					? 0.01 * pastTimeForPoints
-					: 0.002 * pastTimeForPoints
+					const elapsedTimeForPoints =
+						Math.floor(
+							Math.min(
+								Date.now() - user.countDownTime,
+								remainingTimeCountDownTime
+							)
+						) / 1000
 
-				setPoints(user.points + points)
+					const points = user.isHadNft
+						? elapsedTimeForPoints * 0.01
+						: elapsedTimeForPoints * 0.002
 
-				if (remainingTime === 0) {
-					mutateStopTimer(telegramId)
-					UserService.updatePoints(telegramId, usePointsStore.getState().points)
-					return
-				}
-
-				setTimer(remainingTime)
-
-				const intervalId = setInterval(() => {
-					if (useTimerStore.getState().timer <= 0) {
-						UserService.updatePoints(
-							telegramId,
-							usePointsStore.getState().points
-						)
-						mutateStopTimer(telegramId)
-						clearInterval(intervalId)
+					if (remainingTime === 0) {
+						UserService.resetStartTimer(telegramId)
+						UserService.updatePoints(telegramId, points + user.points)
+						queryClient.invalidateQueries({
+							queryKey: ['get-user']
+						})
 						return
 					}
-					increasePoints(user.isHadNft ? 0.01 : 0.002)
-					decreaseTimer()
-				}, 1000)
 
-				setIntervalId(intervalId)
+					setPoints(points + user.points)
+
+					setTimer(remainingTime)
+
+					startInterval(user.isHadNft ? 0.01 : 0.002)
+				}
+				init()
 			} else {
-				setTimer(user.timer.duration)
+				setTimer(DURATION_TIMER)
 				setPoints(user.points)
-				localStorage.clear()
 			}
 		}
 	}, [user])
