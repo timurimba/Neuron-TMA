@@ -25,14 +25,6 @@ export const useLayout = () => {
 	// 	state => state
 	// )
 
-	useEffect(() => {
-		if (!isVisible) {
-			clearInterval(intervalId!)
-		} else {
-			startInterval(0.01)
-		}
-	}, [isVisible])
-
 	const { startInterval } = useStartInterval()
 	const { intervalId } = useIntervalStore(state => state)
 	const { data: user } = useQuery({
@@ -67,6 +59,16 @@ export const useLayout = () => {
 
 	// 	initTimer()
 	// }, [])
+
+	useEffect(() => {
+		if (!isVisible) {
+			clearInterval(intervalId!)
+		} else {
+			queryClient.invalidateQueries({
+				queryKey: ['get-user']
+			})
+		}
+	}, [isVisible])
 
 	useEffect(() => {
 		clearInterval(intervalId!)
