@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
 import { UserService } from '@/services/user/user.service'
@@ -17,6 +17,7 @@ import { useIntervalStore, usePointsStore, useTimerStore } from '@/store/store'
 
 export const useLayout = () => {
 	const { wallet } = useWallet()
+	const [forceUpdate, setForceUpdate] = useState(0)
 
 	const { setTimer } = useTimerStore(state => state)
 	const { setPoints } = usePointsStore(state => state)
@@ -64,16 +65,12 @@ export const useLayout = () => {
 		if (!isVisible) {
 			clearInterval(intervalId!)
 		} else {
-			console.log('Visible')
-			queryClient.invalidateQueries({
-				queryKey: ['get-user']
-			})
+			setForceUpdate(prev => prev + 1)
 		}
 	}, [isVisible])
 
 	useEffect(() => {
 		clearInterval(intervalId!)
-		console.log('UseEffect User')
 		if (user) {
 			if (user.startTimer) {
 				const init = () => {
@@ -119,5 +116,5 @@ export const useLayout = () => {
 				setPoints(user.points)
 			}
 		}
-	}, [user])
+	}, [user, forceUpdate])
 }
