@@ -73,6 +73,7 @@ export const useLayout = () => {
 
 	useEffect(() => {
 		clearInterval(intervalId!)
+		console.log('UseEffect User')
 		if (user) {
 			if (user.startTimer) {
 				const init = () => {
