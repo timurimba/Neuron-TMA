@@ -26,7 +26,7 @@ export const useLayout = () => {
 	// )
 
 	useEffect(() => {
-		if (!isVisible) {
+		if (isVisible === false) {
 			clearInterval(intervalId!)
 		} else {
 			queryClient.invalidateQueries({
@@ -57,17 +57,6 @@ export const useLayout = () => {
 		}
 		initIsHadNft()
 	}, [wallet, user])
-
-	useEffect(() => {
-		window.addEventListener('blur', () => {
-			clearInterval(intervalId!)
-		})
-		window.addEventListener('focus', () => {
-			queryClient.invalidateQueries({
-				queryKey: ['get-user']
-			})
-		})
-	}, [])
 
 	// useEffect(() => {
 	// 	const initTimer = async () => {
