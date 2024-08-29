@@ -8,6 +8,7 @@ import { queryClient } from '@/providers/tanstack/TanstackProvider'
 
 import { IUser } from '@/types/user.types'
 
+import { usePageVisibility } from '@/hooks/usePageVisibility'
 import { useStartInterval } from '@/hooks/useStartInterval'
 import { useWallet } from '@/hooks/useWallet'
 
@@ -19,9 +20,20 @@ export const useLayout = () => {
 
 	const { setTimer } = useTimerStore(state => state)
 	const { setPoints } = usePointsStore(state => state)
+	const isVisible = usePageVisibility()
 	// const { isProcessingTimer, setIsProcessingTimer } = useIsProcessingTimerStore(
 	// 	state => state
 	// )
+
+	useEffect(() => {
+		if (!isVisible) {
+			clearInterval(intervalId!)
+		} else {
+			queryClient.invalidateQueries({
+				queryKey: ['get-user']
+			})
+		}
+	}, [isVisible])
 
 	const { startInterval } = useStartInterval()
 	const { intervalId } = useIntervalStore(state => state)
