@@ -64,6 +64,7 @@ export const useLayout = () => {
 		if (!isVisible) {
 			clearInterval(intervalId!)
 		} else {
+			console.log('Visible')
 			queryClient.invalidateQueries({
 				queryKey: ['get-user']
 			})

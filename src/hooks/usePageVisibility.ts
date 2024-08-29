@@ -4,13 +4,11 @@ export const usePageVisibility = () => {
 	const [isVisible, setIsVisible] = useState(true)
 
 	useEffect(() => {
-		window.addEventListener('blur', () => {
-			setIsVisible(false)
-		})
+		const handleVisibilityChange = () => {
+			setIsVisible(!document.hidden)
+		}
 
-		window.addEventListener('focus', () => {
-			setIsVisible(true)
-		})
+		document.addEventListener('visibilitychange', handleVisibilityChange)
 	}, [])
 
 	return isVisible
