@@ -21,7 +21,8 @@ export const useBuyNft = () => {
 	const { mutate: transferNft } = useMutation({
 		mutationKey: ['transfer-nft'],
 		mutationFn: (data: { wallet: string; randomNftAddress: string }) =>
-			TonService.transferNft(data.wallet, data.randomNftAddress)
+			TonService.transferNft(data.wallet, data.randomNftAddress),
+		onSuccess: () => {}
 	})
 
 	const { sender, wallet } = useWallet()
@@ -37,37 +38,38 @@ export const useBuyNft = () => {
 			const binaryData = Buffer.from(tx.boc, 'base64')
 			const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
 
-			let isSuccess = false
-			const maxAttempts = 10
-			const interval = 5000
+			const availableNfts = await TonService.getNfts(
+				import.meta.env.VITE_OWNER_WALLET_ADDRESS
+			)
 
-			for (let attempt = 0; attempt < maxAttempts; attempt++) {
-				try {
-					await new Promise(resolve => setTimeout(resolve, interval))
+			if (availableNfts.length) {
+				const randomNftAddress =
+					availableNfts[Math.floor(Math.random() * availableNfts.length)]
+						.address
 
-					isSuccess = await TonService.getTransaction(transactionId)
-
-					if (isSuccess) {
-						break
-					}
-				} catch (error) {}
+				transferNft({
+					wallet: wallet!,
+					randomNftAddress
+				})
 			}
-			if (isSuccess) {
-				const availableNfts = await TonService.getNfts(
-					import.meta.env.VITE_OWNER_WALLET_ADDRESS
-				)
 
-				if (availableNfts.length) {
-					const randomNftAddress =
-						availableNfts[Math.floor(Math.random() * availableNfts.length)]
-							.address
+			// let isSuccess = false
+			// const maxAttempts = 10
+			// const interval = 5000
 
-					transferNft({
-						wallet: wallet!,
-						randomNftAddress
-					})
-				}
-			}
+			// for (let attempt = 0; attempt < maxAttempts; attempt++) {
+			// 	try {
+			// 		await new Promise(resolve => setTimeout(resolve, interval))
+
+			// 		isSuccess = await TonService.getTransaction(transactionId)
+
+			// 		if (isSuccess) {
+			// 			break
+			// 		}
+			// 	} catch (error) {}
+			// }
+			// if (isSuccess) {
+			// }
 		} catch (error) {}
 	}
 
