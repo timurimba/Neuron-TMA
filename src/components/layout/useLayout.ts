@@ -22,9 +22,6 @@ export const useLayout = () => {
 	const { setTimer } = useTimerStore(state => state)
 	const { setPoints } = usePointsStore(state => state)
 	const isVisible = usePageVisibility()
-	// const { isProcessingTimer, setIsProcessingTimer } = useIsProcessingTimerStore(
-	// 	state => state
-	// )
 
 	const { startInterval } = useStartInterval()
 	const { intervalId } = useIntervalStore(state => state)
@@ -48,18 +45,6 @@ export const useLayout = () => {
 		}
 		initIsHadNft()
 	}, [wallet, user])
-
-	// useEffect(() => {
-	// 	const initTimer = async () => {
-	// 		const isProcessingTimer = await cloudStorage.get('isProcessingTimer')
-
-	// 		if (!!isProcessingTimer) {
-	// 			setIsProcessingTimer(true)
-	// 		}
-	// 	}
-
-	// 	initTimer()
-	// }, [])
 
 	useEffect(() => {
 		if (!isVisible) {

@@ -38,31 +38,37 @@ export const useBuyNft = () => {
 			const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
 
 			let isSuccess = false
+			const maxAttempts = 10
+			const interval = 5000
 
-			await new Promise(resolve => {
-				setTimeout(async () => {
+			for (let attempt = 0; attempt < maxAttempts; attempt++) {
+				try {
+					await new Promise(resolve => setTimeout(resolve, interval))
+
 					isSuccess = await TonService.getTransaction(transactionId)
-					resolve(null)
-				}, 30000)
-			})
 
+					if (isSuccess) {
+						break
+					}
+				} catch (error) {}
+			}
 			if (isSuccess) {
 				const availableNfts = await TonService.getNfts(
 					import.meta.env.VITE_OWNER_WALLET_ADDRESS
 				)
 
-				const randomNftAddress =
-					availableNfts[Math.floor(Math.random() * availableNfts.length)]
-						.address
+				if (availableNfts.length) {
+					const randomNftAddress =
+						availableNfts[Math.floor(Math.random() * availableNfts.length)]
+							.address
 
-				transferNft({
-					wallet: wallet!,
-					randomNftAddress
-				})
+					transferNft({
+						wallet: wallet!,
+						randomNftAddress
+					})
+				}
 			}
-		} catch (error: any) {
-			console.log(error.messages)
-		}
+		} catch (error) {}
 	}
 
 	return { randomImage, buyNft }
