@@ -15,6 +15,9 @@
 		}
 	}
 	button {
-		@apply bg-black text-white #{!important};
+		@apply bg-black;
+		> div {
+			@apply text-white #{!important};
+		}
 	}
 }
