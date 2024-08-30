@@ -17,7 +17,7 @@ const Points: FC = () => {
 		<div className={styles.points}>
 			<div>
 				<img src={pointsImg} alt='Points Img' />
-				<span>Neuron Points</span>
+				<p>Neuron Points</p>
 			</div>
 			<span>{renderPoints()}</span>
 		</div>

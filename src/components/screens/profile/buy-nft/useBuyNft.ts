@@ -30,7 +30,7 @@ export const useBuyNft = () => {
 		try {
 			await sender.send({
 				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-				value: toNano(0.01)
+				value: toNano(6)
 			})
 
 			const availableNfts = await TonService.getNfts(
@@ -47,25 +47,6 @@ export const useBuyNft = () => {
 					randomNftAddress
 				})
 			}
-
-			// const binaryData = Buffer.from(tx.boc, 'base64')
-			// const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
-
-			// let isSuccess = false
-			// const maxAttempts = 10
-			// const interval = 5000
-
-			// for (let attempt = 0; attempt < maxAttempts; attempt++) {
-			// 	try {
-			// 		await new Promise(resolve => setTimeout(resolve, interval))
-
-			// 		isSuccess = await TonService.getTransaction(transactionId)
-
-			// 		if (isSuccess) {
-			// 			break
-			// 		}
-			// 	} catch (error) {}
-			// }
 		} catch (error: any) {
 			console.log(error)
 		}

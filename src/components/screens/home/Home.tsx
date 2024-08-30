@@ -7,6 +7,9 @@ import Timer from './timer/Timer'
 const Home: FC = () => {
 	return (
 		<>
+			<p className='font-bold my-4  text-2xl text-black text-center'>
+				X5 For points, if you buy NFT!
+			</p>
 			<Points />
 			<Referrals />
 			<Timer />
