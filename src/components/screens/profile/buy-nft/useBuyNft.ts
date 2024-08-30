@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useMemo } from 'react'
+import { Address, toNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
@@ -24,15 +25,15 @@ export const useBuyNft = () => {
 		onSuccess: () => {}
 	})
 
-	const { wallet } = useWallet()
+	const { sender, wallet } = useWallet()
 
 	const buyNft = async () => {
 		try {
-			// const tx = await sender.send({
-			// 	// to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-			// 	to: Address.parse(wallet!),
-			// 	value: toNano(0.01)
-			// })
+			await sender.send({
+				// to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
+				to: Address.parse(wallet!),
+				value: toNano(0.01)
+			})
 
 			// const binaryData = Buffer.from(tx.boc, 'base64')
 			// const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
