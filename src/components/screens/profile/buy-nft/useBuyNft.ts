@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { Address, toNano } from '@ton/core'
+import { toNano } from '@ton/core'
 import { useMemo } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
@@ -21,8 +21,7 @@ export const useBuyNft = () => {
 	const { mutate: transferNft } = useMutation({
 		mutationKey: ['transfer-nft'],
 		mutationFn: (data: { wallet: string; randomNftAddress: string }) =>
-			TonService.transferNft(data.wallet, data.randomNftAddress),
-		onSuccess: () => {}
+			TonService.transferNft(data.wallet, data.randomNftAddress)
 	})
 
 	const { sender, wallet } = useWallet()
@@ -30,8 +29,7 @@ export const useBuyNft = () => {
 	const buyNft = async () => {
 		try {
 			await sender.send({
-				// to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-				to: Address.parse(wallet!),
+				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
 				value: toNano(0.01)
 			})
 

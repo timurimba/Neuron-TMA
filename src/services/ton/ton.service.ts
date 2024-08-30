@@ -1,3 +1,4 @@
+import '@ton/core'
 import TonWeb from 'tonweb'
 import { mnemonicToKeyPair } from 'tonweb-mnemonic'
 
@@ -34,11 +35,33 @@ export const TonService = {
 
 		const keyPair = await mnemonicToKeyPair(mnemonicParts)
 
+		// function createMessageBody() {
+		// 	return beginCell()
+		// 		.storeUint(0, 32)
+		// 		.storeStringTail('Transfer NFT')
+		// 		.endCell()
+		// }
+
+		// const externalMessage = beginCell()
+		// 	.storeUint(0b10, 2)
+		// 	.storeUint(0, 2)
+		// 	.storeAddress(import.meta.env.VITE_OWNER_WALLET_ADDRESS)
+		// 	.storeCoins(toNano('0.01'))
+		// 	.storeBit(0)
+		// 	.storeBit(1)
+		// 	.storeRef(createMessageBody())
+		// 	.endCell()
+
+		// return await apiBlockchain.post('/blockchain/message', {
+		// 	boc: externalMessage.toBoc().toString('base64')
+		// })
+
 		const WalletClass = tonweb.wallet.all['v4R2']
 		const wallet = new WalletClass(tonweb.provider, {
 			publicKey: keyPair.publicKey,
 			wc: 0
 		})
+
 		const nftItem = new TonWeb.token.nft.NftItem(tonweb.provider, {
 			address: nftContractAddress
 		})
