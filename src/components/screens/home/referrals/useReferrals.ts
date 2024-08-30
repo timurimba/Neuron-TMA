@@ -14,7 +14,7 @@ export const useRefferals = () => {
 
 	const inviteFriend = () => {
 		window.open(
-			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/neurons_test_bot?start=${telegramId}`)}`,
+			`https://t.me/share/url?url=${encodeURIComponent(`Hi, here is a referral link to our App: https://t.me/Neuron_ton_bot?start=${telegramId}`)}`,
 			'_blank'
 		)
 	}
