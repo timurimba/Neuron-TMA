@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
+import { Address, toNano } from '@ton/core'
 import { useMemo } from 'react'
-import { Address, toNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
@@ -35,9 +35,6 @@ export const useBuyNft = () => {
 				value: toNano(0.01)
 			})
 
-			// const binaryData = Buffer.from(tx.boc, 'base64')
-			// const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
-
 			const availableNfts = await TonService.getNfts(
 				import.meta.env.VITE_OWNER_WALLET_ADDRESS
 			)
@@ -52,6 +49,9 @@ export const useBuyNft = () => {
 					randomNftAddress
 				})
 			}
+
+			// const binaryData = Buffer.from(tx.boc, 'base64')
+			// const transactionId = Cell.fromBoc(binaryData)[0].hash().toString('hex')
 
 			// let isSuccess = false
 			// const maxAttempts = 10
@@ -68,9 +68,9 @@ export const useBuyNft = () => {
 			// 		}
 			// 	} catch (error) {}
 			// }
-			// if (isSuccess) {
-			// }
-		} catch (error) {}
+		} catch (error: any) {
+			console.log(error)
+		}
 	}
 
 	return { randomImage, buyNft }
