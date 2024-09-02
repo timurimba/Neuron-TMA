@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
+import { fromNano } from '@ton/core'
 import { type FC } from 'react'
-import { fromNano } from 'ton-core'
 
 import { TonService } from '@/services/ton/ton.service'
 
