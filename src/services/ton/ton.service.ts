@@ -1,14 +1,9 @@
 import '@ton/core'
 import { Address, beginCell, toNano } from '@ton/core'
 import { sign } from 'ton-crypto'
-import TonWeb from 'tonweb'
 import { mnemonicToKeyPair } from 'tonweb-mnemonic'
 
 import { apiBlockchain } from '@/api/api'
-
-const tonweb = new TonWeb(
-	new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC')
-)
 
 export const TonService = {
 	getBalance: async (walletAddress: string) => {

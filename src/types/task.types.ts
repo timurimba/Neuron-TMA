@@ -1,7 +1,7 @@
 export interface ITask {
 	bonus: number
 	total: number
-	name: string
+	title: string
 	link: string
 	usersId: string[]
 }
