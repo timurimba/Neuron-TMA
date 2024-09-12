@@ -12,7 +12,7 @@ const App: FC = () => {
 			<TonConnectUIProvider manifestUrl='https://raw.githubusercontent.com/Neuron-project/manifest/main/tonn_manifest.json'>
 				<Layout>
 					<Toaster position='top-center' reverseOrder={false} />
-					<RouterProvider></RouterProvider>
+					<RouterProvider />
 				</Layout>
 			</TonConnectUIProvider>
 		</TanstackProvider>

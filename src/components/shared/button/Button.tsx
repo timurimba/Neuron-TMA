@@ -1,11 +1,16 @@
+import cn from 'clsx'
 import type { FC, PropsWithChildren } from 'react'
 
 import styles from './Button.module.scss'
 import { IButtonProps } from './button.types'
 
-const Button: FC<PropsWithChildren<IButtonProps>> = ({ children, ...rest }) => {
+const Button: FC<PropsWithChildren<IButtonProps>> = ({
+	children,
+	className,
+	...rest
+}) => {
 	return (
-		<button {...rest} className={styles.button}>
+		<button {...rest} className={cn(styles.button, className)}>
 			{children}
 		</button>
 	)

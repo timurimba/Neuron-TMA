@@ -1,5 +1,7 @@
 import { get, ref, set, update } from 'firebase/database'
 
+import { apiTelegramBot } from '@/api/api'
+
 import { database } from '@/database/firebase'
 
 export const UserService = {
@@ -20,6 +22,7 @@ export const UserService = {
 			durationExit: 28800
 		})
 	},
+
 	setIsHadNft: async (telegramUserId: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -27,6 +30,7 @@ export const UserService = {
 			isHadNft: true
 		})
 	},
+
 	setAddressWallet: async (telegramUserId: string, addressWallet: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -34,6 +38,7 @@ export const UserService = {
 			addressWallet
 		})
 	},
+
 	updatePoints: async (telegramUserId: string, points: number) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -41,6 +46,7 @@ export const UserService = {
 			points
 		})
 	},
+
 	startTimer: async (telegramUserId: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -49,8 +55,10 @@ export const UserService = {
 			countDownTime: Date.now()
 		})
 	},
+
 	resetStartTimer: async (telegramUserId: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
+
 		await update(userRef, {
 			startTimer: 0,
 			countDownTime: 0
@@ -61,6 +69,29 @@ export const UserService = {
 
 		await update(userRef, {
 			countDownTime: Date.now()
+		})
+	},
+	awardPointsToUser: async (telegramUserId: string, points: number) => {
+		return await apiTelegramBot.post('/api/award-points', {
+			telegramId: telegramUserId,
+			points
+		})
+	},
+	completeTask: async (telegramUserId: string, link: string) => {
+		const userCompletedTasksRef = ref(
+			database,
+			`users/${telegramUserId}/completedTasks`
+		)
+
+		const tasks =
+			(await get(userCompletedTasksRef)).val() !== null || undefined
+				? Object.values((await get(userCompletedTasksRef)).val())
+				: []
+
+		tasks.push(link)
+
+		await update(userCompletedTasksRef, {
+			...tasks
 		})
 	}
 }
