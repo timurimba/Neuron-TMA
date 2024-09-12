@@ -1,65 +1,12 @@
-// .button {
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// 	height: 40px;
-// 	transition:
-// 		flex-grow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-// 		width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-// 	white-space: nowrap;
-// 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-// 	border-radius: 10px;
-// 	position: relative;
-// 	flex-grow: 1; /* Начальный размер кнопки */
-// 	min-width: 30%; /* Минимальная ширина кнопок в начальном состоянии */
-// }
-
-// .buyButton {
-// 	background-color: black;
-// 	color: white;
-// }
-
-// .saleButton {
-// 	background-color: white;
-// 	color: black;
-// }
-
-// /* Стили для активной кнопки */
-// .button.active {
-// 	flex-grow: 9; /* Увеличиваем размер активной кнопки */
-// 	min-width: 90%; /* Устанавливаем минимальную ширину активной кнопки */
-// }
-
-// /* Стили для промежуточного состояния кнопок */
-// .button.intermediate {
-
-// 	flex-grow: 0.5; /* Промежуточное состояние кнопки */
-// 	min-width: 15%; /* Минимальная ширина кнопок в промежуточном состоянии */
-// }
-
-// /* Обрезка текста для неактивной кнопки */
-// .buttonText {
-// 	transition:
-// 		opacity 0.5s ease,
-// 		width 0.5s ease; /* Более плавный переход текста */
-// }
-
-// .button:not(.active) .buttonText {
-// 	opacity: 1;
-// 	overflow: hidden;
-// 	width: 1ch; /* Обрезка текста до одной буквы */
-// 	text-align: center;
-// }
-
-// .button.active .buttonText {
-// 	width: auto; /* Полный текст для активной кнопки */
-// }
-
 /* src/components/Button/Button.module.scss */
 .button {
 	@apply flex items-center justify-center h-10 whitespace-nowrap shadow-md rounded-md relative transition-all duration-500 ease-in-out;
 	min-width: 30%; /* Минимальная ширина в начальном состоянии */
 	flex-grow: 1; /* Начальный размер кнопки */
+
+	&:active {
+		@apply scale-95;
+	}
 }
 
 .buyButton {
