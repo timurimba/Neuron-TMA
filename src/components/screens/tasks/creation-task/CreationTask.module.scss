@@ -1,0 +1,26 @@
+.creation {
+	> button {
+		@apply ml-auto block mt-4;
+	}
+	> div {
+		@apply transition-all grid grid-rows-[0fr] duration-500;
+		&.active {
+			@apply grid-rows-[1fr];
+		}
+		> form {
+			@apply overflow-hidden;
+			> p {
+				@apply text-center  my-4 text-black text-xs;
+			}
+			.head {
+				@apply w-[57.5%] flex items-center justify-between;
+				> p {
+					@apply text-black font-bold;
+				}
+				&.initial {
+					@apply justify-end;
+				}
+			}
+		}
+	}
+}

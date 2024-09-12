@@ -1,0 +1,52 @@
+.task {
+	@apply w-full  transition-all flex px-4 py-3 justify-between bg-black rounded-xl duration-500 items-center relative overflow-hidden;
+
+	> button {
+		@apply w-14  transition-all duration-500 flex items-center bg-white justify-center  h-8   rounded-full border border-white border-solid;
+		&:not(&:disabled):active {
+			@apply scale-75;
+		}
+		> img {
+			@apply w-5 h-5 object-cover;
+		}
+	}
+	> div {
+		&:first-child {
+			@apply text-left;
+			> div {
+				@apply mt-2 flex items-center gap-x-2;
+				> span {
+					@apply text-white text-[10px];
+				}
+				> p {
+					@apply text-white text-xs font-bold relative pl-4;
+					&::before {
+						content: '';
+						@apply absolute top-0 -left-[3px] w-4 h-4 bg-no-repeat bg-center bg-cover;
+						background-image: url('../../../../assets/images/home/neuron-points-white.svg');
+					}
+				}
+			}
+			> h1 {
+				@apply text-white font-bold flex flex-col;
+				> span {
+					@apply text-sm;
+				}
+			}
+		}
+	}
+}
+
+.check {
+	@apply transition-all text-black;
+	stroke-dasharray: 30px;
+	stroke-dashoffset: 30px;
+	transform-origin: center;
+	animation: draw 0.5s forwards;
+}
+
+@keyframes draw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}

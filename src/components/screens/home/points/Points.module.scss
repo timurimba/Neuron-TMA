@@ -9,11 +9,19 @@
 		}
 		> p {
 			@apply text-xl font-bold text-black;
+			> span {
+				@apply text-gray-500 text-[10px] lowercase font-bold;
+			}
+			@media screen and (max-width: 345px) {
+				@apply text-lg;
+			}
 		}
 	}
 	> span {
 		@apply text-2xl font-bold;
-
 		color: rgb(102, 102, 102);
+		@media screen and (max-width: 345px) {
+			@apply text-xl;
+		}
 	}
 }

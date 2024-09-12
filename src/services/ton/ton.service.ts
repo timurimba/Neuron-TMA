@@ -79,7 +79,21 @@ export const TonService = {
 			Buffer.from(keyPair.secretKey)
 		)
 
-		const body = beginCell().storeBuffer(signature).storeBuilder(toSign)
+		const body = beginCell()
+			.storeBuffer(signature)
+			.storeBuilder(toSign)
+			.endCell()
+
+		// const externalMessage = external({
+		// 	to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
+		// 	body
+		// })
+
+		// internal({
+		// 	to: nftContractAddress,
+		// 	value: toNano(0.02),
+		// 	body: internalMessageBody
+		// })
 
 		const externalMessage = beginCell()
 			.storeUint(0b10, 2) // ext_in_msg_info$10

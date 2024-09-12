@@ -7,3 +7,10 @@ export const apiBlockchain = axios.create({
 		'Content-type': 'application/json'
 	}
 })
+
+export const apiTelegramBot = axios.create({
+	baseURL: 'https://neuronforbot.hopto.org',
+	headers: {
+		'Content-type': 'application/json'
+	}
+})
