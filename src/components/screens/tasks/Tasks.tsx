@@ -76,7 +76,7 @@ const Tasks: FC = () => {
 							<motion.div
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
-								className='text-center bg-black bg-opacity-90 text-white shadow-lg shadow-bl w-[90%] h-[20%] flex items-center justify-center	 rounded-lg absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 font-bold text-lg'
+								className='text-center bg-black bg-opacity-90 text-white shadow-lg p-10 flex items-center justify-center	 rounded-lg  font-bold text-lg'
 							>
 								No available tasks
 							</motion.div>
