@@ -93,5 +93,17 @@ export const UserService = {
 		await update(userCompletedTasksRef, {
 			...tasks
 		})
+	},
+	getTotalReferralPoints: async (telegramUserId: string) => {
+		try {
+			const pointsRef = ref(database, `users/${telegramUserId}/totalReferralPoints`);
+			const pointsSnapshot = await get(pointsRef);
+			const points = pointsSnapshot.val();
+			return typeof points === 'number' ? points : 0;
+		} catch (error) {
+			console.error('Error fetching totalReferralPoints:', error);
+			return 0; // Верните значение по умолчанию в случае ошибки
+		}
 	}
+
 }
