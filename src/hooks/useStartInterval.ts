@@ -3,17 +3,11 @@ import { UserService } from '@/services/user/user.service'
 import { queryClient } from '@/providers/tanstack/TanstackProvider'
 
 import { telegramId } from '@/consts/consts'
-import {
-	useIntervalStore,
-	useIsProcessingTimerStore,
-	usePointsStore,
-	useTimerStore
-} from '@/store/store'
+import { useIntervalStore, usePointsStore, useTimerStore } from '@/store/store'
 
 export const useStartInterval = () => {
 	const { decreaseTimer } = useTimerStore(state => state)
 	const { increasePoints } = usePointsStore(state => state)
-	const { setIsProcessingTimer } = useIsProcessingTimerStore(state => state)
 	const { setIntervalId } = useIntervalStore(state => state)
 	const startInterval = (coefficient: number) => {
 		const id = setInterval(() => {
@@ -23,7 +17,6 @@ export const useStartInterval = () => {
 				queryClient.invalidateQueries({
 					queryKey: ['get-user']
 				})
-				setIsProcessingTimer(false)
 				clearInterval(id)
 				return
 			}

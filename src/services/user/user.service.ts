@@ -23,11 +23,11 @@ export const UserService = {
 		})
 	},
 
-	setIsHadNft: async (telegramUserId: string) => {
+	setIsHadNft: async (telegramUserId: string, value: boolean) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
 		await update(userRef, {
-			isHadNft: true
+			isHadNft: value
 		})
 	},
 

@@ -32,17 +32,25 @@ export const useLayout = () => {
 
 	useEffect(() => {
 		const initIsHadNft = async () => {
-			if (wallet && user && user.startTimer && !user.isHadNft) {
+			if (wallet && user) {
 				const nfts = await TonService.getNfts(wallet)
-				if (nfts.length) {
-					UserService.setIsHadNft(telegramId)
+				if (nfts.length && !user.isHadNft) {
+					UserService.setIsHadNft(telegramId, true)
 					UserService.setCountDownTimer(telegramId)
 					UserService.updatePoints(telegramId, usePointsStore.getState().points)
 					clearInterval(intervalId!)
 					startInterval(0.01)
 				}
+				if (!nfts.length && user.isHadNft) {
+					UserService.setIsHadNft(telegramId, false)
+					UserService.setCountDownTimer(telegramId)
+					UserService.updatePoints(telegramId, usePointsStore.getState().points)
+					clearInterval(intervalId!)
+					startInterval(0.002)
+				}
 			}
 		}
+
 		initIsHadNft()
 	}, [wallet, user])
 

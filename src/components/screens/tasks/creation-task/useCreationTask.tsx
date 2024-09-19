@@ -69,6 +69,7 @@ export const useCreationTask = () => {
 			queryClient.invalidateQueries({
 				queryKey: ['get-tasks']
 			})
+
 			UserService.updatePoints(
 				telegramId,
 				usePointsStore.getState().points - getValues('budget')!

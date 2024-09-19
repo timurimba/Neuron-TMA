@@ -1,5 +1,5 @@
 .task {
-	@apply w-full  transition-all flex px-4 py-3 justify-between bg-black rounded-xl duration-500 items-center relative overflow-hidden;
+	@apply w-full  transition-all flex px-4 py-3 justify-between rounded-xl duration-500 items-center relative overflow-hidden bg-black;
 
 	> button {
 		@apply w-14  transition-all duration-500 flex items-center bg-white justify-center  h-8   rounded-full border border-white border-solid;

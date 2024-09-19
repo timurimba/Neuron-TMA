@@ -84,6 +84,34 @@ export const TonService = {
 		})
 	},
 
+	sellTon: async (responseWallet: string) => {
+		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
+
+		const keyPair = await mnemonicToWalletKey(mnemonicParts)
+
+		const seqno = await TonService.getSeqnoWallet()
+
+		const wallet = WalletContractV4.create({
+			publicKey: keyPair.publicKey,
+			walletId: 698983191,
+			workchain: 0
+		})
+
+		const walletContract = client.open(wallet)
+
+		return await walletContract.sendTransfer({
+			secretKey: keyPair.secretKey,
+			seqno,
+			messages: [
+				internal({
+					value: toNano(20),
+					to: responseWallet,
+					body: 'You received TON from Neuron'
+				})
+			]
+		})
+	},
+
 	getTransaction: async (transactionId: string) => {
 		const { data } = await apiBlockchain.get(
 			`/blockchain/transactions/${transactionId}`
