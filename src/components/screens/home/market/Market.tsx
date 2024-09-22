@@ -11,6 +11,7 @@ import { IUser } from '@/types/user.types'
 import { useWallet } from '@/hooks/useWallet'
 
 import {
+	BUY_NP,
 	BUY_TEXT_FULL,
 	BUY_TEXT_SHORT,
 	SALE_TEXT_FULL,
@@ -34,6 +35,8 @@ const Market: React.FC = () => {
 			onSuccess: () => {
 				toast.success("You've succesfully bought NP")
 				setPoints(usePointsStore.getState().points + 10000)
+
+				UserService.addTransactionBuy(wallet!)
 			}
 		})
 
@@ -46,6 +49,7 @@ const Market: React.FC = () => {
 				toast.success("You've succesfully sold NP")
 				setPoints(usePointsStore.getState().points - 100000)
 				TonService.sellTon(wallet!)
+				UserService.addTransactionSell(wallet!)
 			}
 		})
 
@@ -67,12 +71,13 @@ const Market: React.FC = () => {
 					return
 				}
 				await sender.send({
-					to: Address.parse(import.meta.env.VITE_OWNER_WALLET_ADDRESS),
-					value: toNano(3)
+					// to: Address.parse(import.meta.env.VITE_OWNER_WALLET_ADDRESS),
+					to: Address.parse(wallet!),
+					value: toNano(0.01)
 				})
 				mutateBuyPoints({
 					telegramId,
-					points: usePointsStore.getState().points + 10000
+					points: usePointsStore.getState().points + BUY_NP
 				})
 			} else {
 				setActiveButton('buy')
@@ -94,11 +99,7 @@ const Market: React.FC = () => {
 				toast.error('Invite 3 or more friends to open Sell button')
 			}
 
-			if (
-				wallet &&
-				usePointsStore.getState().points >= 100000 &&
-				user!.referrals.length >= 3
-			) {
+			if (wallet && usePointsStore.getState().points >= 100000) {
 				mutateSellPoints({
 					telegramId,
 					points: usePointsStore.getState().points - 100000

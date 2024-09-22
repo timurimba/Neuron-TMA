@@ -1,10 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
 import { UserService } from '@/services/user/user.service'
-
-import { queryClient } from '@/providers/tanstack/TanstackProvider'
 
 import { IUser } from '@/types/user.types'
 
@@ -28,6 +26,11 @@ export const useLayout = () => {
 	const { data: user } = useQuery({
 		queryKey: ['get-user'],
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
+	})
+
+	const { mutateAsync: mutateVerifyTimer, data } = useMutation({
+		mutationFn: () => UserService.verifyEndTimer(telegramId),
+		mutationKey: ['verify-points']
 	})
 
 	useEffect(() => {
@@ -66,7 +69,7 @@ export const useLayout = () => {
 		clearInterval(intervalId!)
 		if (user) {
 			if (user.startTimer) {
-				const init = () => {
+				const init = async () => {
 					const elapsedTime = Math.floor(
 						Math.min((Date.now() - user.startTimer) / 1000, DURATION_TIMER)
 					)
@@ -89,11 +92,15 @@ export const useLayout = () => {
 						: elapsedTimeForPoints * 0.002
 
 					if (remainingTime === 0) {
-						UserService.resetStartTimer(telegramId)
-						UserService.updatePoints(telegramId, points + user.points)
-						queryClient.invalidateQueries({
-							queryKey: ['get-user']
-						})
+						await mutateVerifyTimer()
+						if (data.isVerify) {
+							UserService.resetStartTimer(telegramId)
+							UserService.updatePoints(telegramId, points + user.points)
+						} else {
+							setPoints(points + user.points)
+							setTimer(data.timer)
+							startInterval(user.isHadNft ? 0.01 : 0.002)
+						}
 						return
 					}
 
