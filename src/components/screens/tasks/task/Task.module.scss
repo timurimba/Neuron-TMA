@@ -2,7 +2,7 @@
 	@apply w-full  transition-all flex px-4 py-3 justify-between rounded-xl duration-500 items-center relative overflow-hidden bg-black;
 
 	> button {
-		@apply w-14  transition-all duration-500 flex items-center bg-white justify-center  h-8   rounded-full border border-white border-solid;
+		@apply w-14  transition-all duration-500 flex items-center bg-white justify-center  h-8 flex-shrink-0   rounded-full border border-white border-solid;
 		&:not(&:disabled):active {
 			@apply scale-75;
 		}
@@ -29,8 +29,20 @@
 			}
 			> h1 {
 				@apply text-white font-bold flex flex-col;
+				@media screen and (max-width: 410px) {
+					@apply text-xs gap-y-1;
+				}
+				@media screen and (max-width: 340px) {
+					@apply text-[10px];
+				}
 				> span {
 					@apply text-sm;
+					@media screen and (max-width: 410px) {
+						@apply text-xs;
+					}
+					@media screen and (max-width: 340px) {
+						@apply text-[10px];
+					}
 				}
 			}
 		}

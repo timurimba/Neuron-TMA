@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { TonService } from '@/services/ton/ton.service'
 import { UserService } from '@/services/user/user.service'
 
+import { queryClient } from '@/providers/tanstack/TanstackProvider'
+
 import { IUser } from '@/types/user.types'
 
 import { usePageVisibility } from '@/hooks/usePageVisibility'
@@ -28,9 +30,9 @@ export const useLayout = () => {
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
 	})
 
-	const { mutateAsync: mutateVerifyTimer, data } = useMutation({
-		mutationFn: () => UserService.verifyEndTimer(telegramId),
-		mutationKey: ['verify-points']
+	const { mutateAsync: mutateVerifyTimer } = useMutation({
+		mutationFn: (telegramId: string) => UserService.verifyEndTimer(telegramId),
+		mutationKey: ['verify-timer']
 	})
 
 	useEffect(() => {
@@ -90,15 +92,20 @@ export const useLayout = () => {
 					const points = user.isHadNft
 						? elapsedTimeForPoints * 0.01
 						: elapsedTimeForPoints * 0.002
-
 					if (remainingTime === 0) {
-						await mutateVerifyTimer()
+						const data = await mutateVerifyTimer(telegramId)
 						if (data.isVerify) {
 							UserService.resetStartTimer(telegramId)
 							UserService.updatePoints(telegramId, points + user.points)
+							UserService.awardPointsToUser(telegramId, points)
+							queryClient.invalidateQueries({
+								queryKey: ['get-user']
+							})
 						} else {
-							setPoints(points + user.points)
+							setPoints(data.points + user.points)
+
 							setTimer(data.timer)
+
 							startInterval(user.isHadNft ? 0.01 : 0.002)
 						}
 						return

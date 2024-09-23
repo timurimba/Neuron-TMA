@@ -136,10 +136,14 @@ export const useCreationTask = () => {
 					<div className='flex flex-col gap-y-4'>
 						<Field
 							className={`${errors.title && '!border-red-500'}`}
-							placeholder='Title'
+							placeholder='Title (Maximum number of characters 34)'
 							type='text'
 							{...register('title', {
-								required: true
+								required: true,
+								pattern: {
+									value: /^.{0,34}$/,
+									message: 'Maximum number of characters 34'
+								}
 							})}
 						/>
 						<Select

@@ -82,7 +82,7 @@ export const UserService = {
 
 	verifyEndTimer: async (telegramUserId: string) => {
 		const { data } = await apiTelegramBot.post('/api/verify-timer', {
-			telegramUserId
+			telegramId: telegramUserId
 		})
 
 		return data

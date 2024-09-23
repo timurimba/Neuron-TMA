@@ -44,16 +44,6 @@ const Task: FC<ITaskProps> = ({
 			TaskService.checkSubscription(data)
 	})
 
-	const { mutate: awardPointsToUser } = useMutation({
-		mutationFn: (points: number) => UserService.awardPointsToUser(telegramId, points),
-		onSuccess: () => {
-			toast.success('Points awarded successfully!')
-		},
-		onError: () => {
-			toast.error('Failed to award points.')
-		}
-	})
-
 	useEffect(() => {
 		const check = async () => {
 			switch (subscription) {
@@ -61,7 +51,7 @@ const Task: FC<ITaskProps> = ({
 					toast.success("You've successfully completed the task")
 					UserService.completeTask(telegramId, link)
 					UserService.updatePoints(telegramId, user!.points + reward!)
-					awardPointsToUser(reward!)
+					UserService.awardPointsToUser(telegramId, reward!)
 					TaskService.complete(id)
 					setIsAnimatedCheckMark(true)
 					await sleep(500)

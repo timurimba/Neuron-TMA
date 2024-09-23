@@ -35,8 +35,8 @@ const Market: React.FC = () => {
 			onSuccess: () => {
 				toast.success("You've succesfully bought NP")
 				setPoints(usePointsStore.getState().points + 10000)
-
 				UserService.addTransactionBuy(wallet!)
+				UserService.awardPointsToUser(telegramId, BUY_NP)
 			}
 		})
 
