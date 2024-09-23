@@ -1,5 +1,5 @@
 import { Address } from '@ton/ton'
-import { get, ref, set, update } from 'firebase/database'
+import { get, ref, update } from 'firebase/database'
 import { v4 } from 'uuid'
 
 import { apiTelegramBot } from '@/api/api'
@@ -43,16 +43,6 @@ export const UserService = {
 				})}`,
 				points: BUY_NP
 			}
-		})
-	},
-
-	stopTimer: async (telegramUserId: string) => {
-		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
-
-		return await set(userTimerRef, {
-			isProcessing: false,
-			duration: 28800,
-			durationExit: 28800
 		})
 	},
 

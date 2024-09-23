@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { Address } from '@ton/core'
 import { useEffect, useState } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
@@ -39,6 +40,12 @@ export const useLayout = () => {
 		const initIsHadNft = async () => {
 			if (wallet && user) {
 				const nfts = await TonService.getNfts(wallet)
+				UserService.setAddressWallet(
+					telegramId,
+					`${Address.parse(wallet!).toString({
+						bounceable: false
+					})}`
+				)
 				if (nfts.length && !user.isHadNft) {
 					UserService.setIsHadNft(telegramId, true)
 					UserService.setCountDownTimer(telegramId)

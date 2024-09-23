@@ -50,7 +50,6 @@ const Task: FC<ITaskProps> = ({
 				case true: {
 					toast.success("You've successfully completed the task")
 					UserService.completeTask(telegramId, link)
-					UserService.updatePoints(telegramId, user!.points + reward!)
 					UserService.awardPointsToUser(telegramId, reward!)
 					TaskService.complete(id)
 					setIsAnimatedCheckMark(true)
