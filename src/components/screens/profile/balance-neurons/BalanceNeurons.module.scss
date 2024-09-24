@@ -1,17 +1,13 @@
 .wrapper {
-	@apply flex gap-x-5 mt-10;
-	/* @media screen and (max-width: 600px) {
-		@apply flex-col gap-x-0 gap-y-5;
-	} */
+	@apply flex gap-x-5 mt-3;
+
 	> div {
 		@apply p-10;
 
 		background-color: rgba(0, 0, 0, 0.03);
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		/* @media screen and (max-width: 600px) {
-			@apply w-full;
-		} */
+
 		&:first-child {
 			@apply flex w-[35%] flex-col items-center gap-y-2;
 			> h2 {

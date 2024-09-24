@@ -1,0 +1,29 @@
+.select {
+	&__single-value {
+		@apply text-black #{!important};
+	}
+	&__menu {
+		@apply static #{!important};
+		&-list {
+			@apply p-0 border border-solid border-black #{!important};
+		}
+	}
+	&__placeholder {
+		@apply text-gray-500 #{!important};
+	}
+	&__control {
+		@apply border-black shadow-none #{!important};
+	}
+
+	&__option {
+		@apply transition-all  cursor-pointer text-black bg-white #{!important};
+
+		&:hover {
+			@apply bg-black  text-white #{!important};
+		}
+	}
+}
+
+.select--error .select__control {
+	@apply border-red-500 #{!important};
+}

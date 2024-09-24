@@ -7,7 +7,6 @@ import { useLayout } from './useLayout'
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
 	useLayout()
-
 	return (
 		<Router>
 			<Header />
