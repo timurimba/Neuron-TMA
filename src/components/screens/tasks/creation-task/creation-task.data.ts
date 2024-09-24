@@ -1,4 +1,4 @@
-import { IOption } from '@/components/shared/select/select.interface'
+import { IOption } from '@/components/shared/select/select.types'
 
 export const budgetData: IOption[] = [
 	{

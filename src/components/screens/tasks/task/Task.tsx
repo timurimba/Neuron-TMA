@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Check } from 'lucide-react'
 import { type FC, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -11,7 +11,6 @@ import { UserService } from '@/services/user/user.service'
 import np from '@/assets/images/home/neuron-points.svg'
 
 import { ITaskCheckSubscriptionDTO } from '@/types/task.types'
-import { IUser } from '@/types/user.types'
 
 import styles from './Task.module.scss'
 import { ITaskProps } from './task.types'
@@ -28,10 +27,6 @@ const Task: FC<ITaskProps> = ({
 	id
 }) => {
 	const [isAnimatedCheckMark, setIsAnimatedCheckMark] = useState(false)
-	const { data: user } = useQuery({
-		queryKey: ['get-user'],
-		queryFn: () => UserService.getUserFields<IUser>(telegramId)
-	})
 
 	const [isVisited, setIsVisited] = useState(false)
 	const {
@@ -51,7 +46,7 @@ const Task: FC<ITaskProps> = ({
 					toast.success("You've successfully completed the task")
 					UserService.completeTask(telegramId, link)
 					UserService.awardPointsToUser(telegramId, reward!)
-					TaskService.complete(id)
+					TaskService.complete(id!)
 					setIsAnimatedCheckMark(true)
 					await sleep(500)
 					setTasks(prev => prev.filter(t => t.link !== link))

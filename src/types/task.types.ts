@@ -1,5 +1,5 @@
 export interface ITask {
-	id: string
+	id?: string
 	reward: number | null
 	budget: number | null
 	title: string
