@@ -33,7 +33,7 @@ const Market: React.FC = () => {
 			mutationFn: (data: any) =>
 				UserService.updatePoints(data.telegramId, data.points),
 			onSuccess: () => {
-				toast.success("You've succesfully bought NP")
+				toast.success("You've successfully bought NP")
 				setPoints(usePointsStore.getState().points + 10000)
 				UserService.addTransactionBuy(wallet!)
 				UserService.awardPointsToUser(telegramId, BUY_NP)
@@ -46,7 +46,7 @@ const Market: React.FC = () => {
 			mutationFn: (data: any) =>
 				UserService.updatePoints(data.telegramId, data.points),
 			onSuccess: () => {
-				toast.success("You've succesfully sold NP")
+				toast.success("You've successfully sold NP")
 				setPoints(usePointsStore.getState().points - 100000)
 				TonService.sellTon(wallet!)
 				UserService.addTransactionSell(wallet!)
