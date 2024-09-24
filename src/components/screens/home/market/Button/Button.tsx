@@ -14,7 +14,7 @@ type ButtonProps = {
 	isDisabled?: boolean // Новое свойство для состояния активности
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
 	active,
 	onClick,
 	shortText,
@@ -44,5 +44,3 @@ const Button: React.FC<ButtonProps> = ({
 		</button>
 	)
 }
-
-export default Button

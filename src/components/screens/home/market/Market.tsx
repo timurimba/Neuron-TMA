@@ -20,7 +20,7 @@ import {
 } from '../../../../consts/consts'
 
 import styles from './Market.module.scss'
-import Button from './button/Button'
+import { Button } from './button/Button'
 import { usePointsStore } from '@/store/store'
 
 const Market: React.FC = () => {
