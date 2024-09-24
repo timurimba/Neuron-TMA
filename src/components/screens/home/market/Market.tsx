@@ -19,8 +19,8 @@ import {
 	telegramId
 } from '../../../../consts/consts'
 
-import Button from './Button/Button'
 import styles from './Market.module.scss'
+import Button from './button/Button'
 import { usePointsStore } from '@/store/store'
 
 const Market: React.FC = () => {
