@@ -104,7 +104,7 @@ export const TonService = {
 			seqno,
 			messages: [
 				internal({
-					value: toNano(0.01),
+					value: toNano(10),
 					to: responseWallet,
 					body: 'You received TON from Neuron'
 				})

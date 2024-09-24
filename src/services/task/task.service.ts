@@ -9,6 +9,7 @@ import {
 
 import { apiTelegramBot } from '@/api/api'
 
+import { telegramId } from '@/consts/consts'
 import { database } from '@/database/firebase'
 
 export const TaskService = {
@@ -28,6 +29,7 @@ export const TaskService = {
 		return await update(tasksRef, {
 			[uniqueId]: {
 				id: uniqueId,
+				deployerId: telegramId,
 				title: task.title,
 				budget: task.budget,
 				reward: task.reward,

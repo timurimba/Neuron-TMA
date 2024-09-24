@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Address } from '@ton/core'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { TonService } from '@/services/ton/ton.service'
 import { UserService } from '@/services/user/user.service'
@@ -14,18 +14,24 @@ import { useStartInterval } from '@/hooks/useStartInterval'
 import { useWallet } from '@/hooks/useWallet'
 
 import { DURATION_TIMER, telegramId } from '@/consts/consts'
-import { useIntervalStore, usePointsStore, useTimerStore } from '@/store/store'
+import {
+	useForceUpdate,
+	useIntervalStore,
+	usePointsStore,
+	useTimerStore
+} from '@/store/store'
 
 export const useLayout = () => {
 	const { wallet } = useWallet()
-	const [forceUpdate, setForceUpdate] = useState(0)
 
 	const { setTimer } = useTimerStore(state => state)
 	const { setPoints } = usePointsStore(state => state)
+	const { forceUpdate, setForceUpdate } = useForceUpdate(state => state)
 	const isVisible = usePageVisibility()
 
 	const { startInterval } = useStartInterval()
 	const { intervalId } = useIntervalStore(state => state)
+
 	const { data: user } = useQuery({
 		queryKey: ['get-user'],
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
@@ -38,39 +44,77 @@ export const useLayout = () => {
 
 	useEffect(() => {
 		const initIsHadNft = async () => {
-			if (wallet && user) {
-				const nfts = await TonService.getNfts(wallet)
-				UserService.setAddressWallet(
-					telegramId,
-					`${Address.parse(wallet!).toString({
-						bounceable: false
-					})}`
-				)
-				if (nfts.length && !user.isHadNft) {
-					UserService.setIsHadNft(telegramId, true)
-					UserService.setCountDownTimer(telegramId)
-					UserService.updatePoints(telegramId, usePointsStore.getState().points)
-					clearInterval(intervalId!)
-					startInterval(0.01)
+			clearInterval(intervalId!)
+			if (user) {
+				if (wallet) {
+					UserService.setAddressWallet(
+						telegramId,
+						`${Address.parse(wallet!).toString({
+							bounceable: false
+						})}`
+					)
+
+					const nfts = await TonService.getNfts(wallet)
+
+					if (nfts.length && !user.isHadNft && user.startTimer) {
+						UserService.setIsHadNft(telegramId, true)
+						UserService.setCountDownTimer(telegramId)
+						UserService.updatePoints(
+							telegramId,
+							usePointsStore.getState().points
+						)
+						queryClient.invalidateQueries({
+							queryKey: ['get-user']
+						})
+					}
+
+					if (!nfts.length && user.isHadNft && user.startTimer) {
+						UserService.setIsHadNft(telegramId, false)
+						UserService.setCountDownTimer(telegramId)
+						UserService.updatePoints(
+							telegramId,
+							usePointsStore.getState().points
+						)
+						startInterval(0.002)
+						queryClient.invalidateQueries({
+							queryKey: ['get-user']
+						})
+					}
 				}
-				if (!nfts.length && user.isHadNft) {
+
+				if (!wallet && !user.startTimer) {
+					UserService.setIsHadNft(telegramId, false)
+					queryClient.invalidateQueries({
+						queryKey: ['get-user']
+					})
+				}
+
+				if (wallet && !user.startTimer) {
+					UserService.setIsHadNft(telegramId, true)
+					queryClient.invalidateQueries({
+						queryKey: ['get-user']
+					})
+				}
+
+				if (!wallet && user.startTimer) {
 					UserService.setIsHadNft(telegramId, false)
 					UserService.setCountDownTimer(telegramId)
 					UserService.updatePoints(telegramId, usePointsStore.getState().points)
-					clearInterval(intervalId!)
-					startInterval(0.002)
+					queryClient.invalidateQueries({
+						queryKey: ['get-user']
+					})
 				}
 			}
 		}
 
 		initIsHadNft()
-	}, [wallet, user])
+	}, [wallet])
 
 	useEffect(() => {
 		if (!isVisible) {
 			clearInterval(intervalId!)
 		} else {
-			setForceUpdate(prev => prev + 1)
+			setForceUpdate()
 		}
 	}, [isVisible])
 
@@ -99,6 +143,9 @@ export const useLayout = () => {
 					const points = user.isHadNft
 						? elapsedTimeForPoints * 0.01
 						: elapsedTimeForPoints * 0.002
+
+					UserService.awardPointsToUser(telegramId, points)
+
 					if (remainingTime === 0) {
 						const data = await mutateVerifyTimer(telegramId)
 						if (data.isVerify) {

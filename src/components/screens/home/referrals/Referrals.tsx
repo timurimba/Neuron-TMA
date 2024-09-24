@@ -6,13 +6,17 @@ import styles from './Referrals.module.scss'
 import { useRefferals } from './useReferrals'
 
 const Referrals: FC = () => {
-	const { getReferralsCount, isLoading, inviteFriend, totalReferralPoints } = useRefferals()
+	const { getReferralsCount, isLoading, inviteFriend, totalReferralPoints } =
+		useRefferals()
 
 	return (
 		<div className={styles.referrals}>
 			<div>
 				<img src={refs} alt='' />
-				<div>(Total referrals reward: {isLoading ? 'Loading...' : `${totalReferralPoints} NP`})</div>
+				<div>
+					(Total income:{' '}
+					{isLoading ? 'Loading...' : `${Math.floor(totalReferralPoints)} NP`})
+				</div>
 				<span>{isLoading ? 'Loading...' : getReferralsCount()}</span>
 			</div>
 			<button onClick={inviteFriend}>

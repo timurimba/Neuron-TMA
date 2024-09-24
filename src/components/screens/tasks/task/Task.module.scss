@@ -2,7 +2,8 @@
 	@apply w-full  transition-all flex px-4 py-3 justify-between rounded-xl duration-500 items-center relative overflow-hidden bg-black;
 
 	> button {
-		@apply w-14  transition-all duration-500 flex items-center bg-white justify-center  h-8 flex-shrink-0   rounded-full border border-white border-solid;
+		@apply w-16  transition-all duration-500 flex items-center bg-white justify-center  h-12 flex-shrink-0   rounded-full border border-white border-solid;
+		animation: pulse 2s infinite;
 		&:not(&:disabled):active {
 			@apply scale-75;
 		}
@@ -60,5 +61,17 @@
 @keyframes draw {
 	to {
 		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+	}
+	50% {
+		box-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 	}
 }
