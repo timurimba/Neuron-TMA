@@ -19,7 +19,7 @@ import {
 	telegramId
 } from '../../../../consts/consts'
 
-import styles from './ButtonMarket.module.scss'
+import styles from './Market.module.scss'
 import Button from './button-market/ButtonMarket'
 import { usePointsStore } from '@/store/store'
 

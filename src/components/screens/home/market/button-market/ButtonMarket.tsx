@@ -2,7 +2,7 @@ import React from 'react'
 
 import Loader from '@/components/shared/loader/Loader'
 
-import styles from './Button.module.scss'
+import styles from './ButtonMarket.module.scss'
 
 type ButtonProps = {
 	active: boolean
