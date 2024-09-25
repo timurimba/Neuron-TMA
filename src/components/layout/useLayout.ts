@@ -44,71 +44,50 @@ export const useLayout = () => {
 
 	useEffect(() => {
 		const initIsHadNft = async () => {
-			clearInterval(intervalId!)
-			if (user) {
-				if (wallet) {
-					UserService.setAddressWallet(
-						telegramId,
-						`${Address.parse(wallet!).toString({
-							bounceable: false
-						})}`
-					)
-
-					const nfts = await TonService.getNfts(wallet)
-
-					if (nfts.length && !user.isHadNft && user.startTimer) {
-						UserService.setIsHadNft(telegramId, true)
-						UserService.setCountDownTimer(telegramId)
-						UserService.updatePoints(
-							telegramId,
-							usePointsStore.getState().points
-						)
-						queryClient.invalidateQueries({
-							queryKey: ['get-user']
-						})
-					}
-
-					if (!nfts.length && user.isHadNft && user.startTimer) {
-						UserService.setIsHadNft(telegramId, false)
-						UserService.setCountDownTimer(telegramId)
-						UserService.updatePoints(
-							telegramId,
-							usePointsStore.getState().points
-						)
-						startInterval(0.002)
-						queryClient.invalidateQueries({
-							queryKey: ['get-user']
-						})
-					}
-				}
-
-				if (!wallet && !user.startTimer) {
-					UserService.setIsHadNft(telegramId, false)
-					queryClient.invalidateQueries({
-						queryKey: ['get-user']
+			if (wallet && user) {
+				UserService.setAddressWallet(
+					telegramId,
+					Address.parse(wallet!).toString({
+						bounceable: false
 					})
-				}
-
-				if (wallet && !user.startTimer) {
+				)
+				const nfts = await TonService.getNfts(wallet)
+				if (nfts.length && !user.isHadNft) {
 					UserService.setIsHadNft(telegramId, true)
-					queryClient.invalidateQueries({
-						queryKey: ['get-user']
-					})
-				}
+					UserService.setCountDownTimer(telegramId)
 
-				if (!wallet && user.startTimer) {
+					UserService.updatePoints(telegramId, usePointsStore.getState().points)
+					queryClient.invalidateQueries({
+						queryKey: ['get-is-had-nft']
+					})
+					clearInterval(intervalId!)
+					startInterval(0.01)
+				}
+				if (!nfts.length && user.isHadNft) {
 					UserService.setIsHadNft(telegramId, false)
 					UserService.setCountDownTimer(telegramId)
 					UserService.updatePoints(telegramId, usePointsStore.getState().points)
 					queryClient.invalidateQueries({
-						queryKey: ['get-user']
+						queryKey: ['get-is-had-nft']
 					})
+					clearInterval(intervalId!)
+					startInterval(0.002)
 				}
+			}
+			if (!wallet && user && user.isHadNft) {
+				UserService.setIsHadNft(telegramId, false)
+				UserService.setCountDownTimer(telegramId)
+				UserService.updatePoints(telegramId, usePointsStore.getState().points)
+				queryClient.invalidateQueries({
+					queryKey: ['get-is-had-nft']
+				})
+				clearInterval(intervalId!)
+				startInterval(0.002)
 			}
 		}
 
 		initIsHadNft()
-	}, [wallet])
+	}, [wallet, user])
 
 	useEffect(() => {
 		if (!isVisible) {
@@ -143,8 +122,6 @@ export const useLayout = () => {
 					const points = user.isHadNft
 						? elapsedTimeForPoints * 0.01
 						: elapsedTimeForPoints * 0.002
-
-					UserService.awardPointsToUser(telegramId, points)
 
 					if (remainingTime === 0) {
 						const data = await mutateVerifyTimer(telegramId)

@@ -5,17 +5,15 @@ import { UserService } from '@/services/user/user.service'
 
 import pointsImg from '@/assets/images/home/neuron-points.svg'
 
-import { IUser } from '@/types/user.types'
-
 import styles from './Points.module.scss'
 import { telegramId } from '@/consts/consts'
 import { usePointsStore } from '@/store/store'
 
 const Points: FC = () => {
 	const { points } = usePointsStore(state => state)
-	const { data: user } = useQuery({
-		queryKey: ['get-user'],
-		queryFn: () => UserService.getUserFields<IUser>(telegramId)
+	const { data: isHadNft } = useQuery({
+		queryKey: ['get-is-had-nft'],
+		queryFn: () => UserService.getUserFields<boolean>(telegramId, 'isHadNft')
 	})
 
 	const renderPoints = () => {
@@ -28,7 +26,7 @@ const Points: FC = () => {
 			<div>
 				<img src={pointsImg} alt='Points Img' />
 				<p>
-					Neuron Points <span>{user?.isHadNft ? 'X5' : 'X1'}</span>
+					Neuron Points <span>{isHadNft ? 'X5' : 'X1'}</span>
 				</p>
 			</div>
 			<span>{renderPoints()}</span>
