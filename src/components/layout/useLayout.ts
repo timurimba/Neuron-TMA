@@ -55,7 +55,11 @@ export const useLayout = () => {
 				if (nfts.length && !user.isHadNft) {
 					UserService.setIsHadNft(telegramId, true)
 					UserService.setCountDownTimer(telegramId)
+
 					UserService.updatePoints(telegramId, usePointsStore.getState().points)
+					queryClient.invalidateQueries({
+						queryKey: ['get-is-had-nft']
+					})
 					clearInterval(intervalId!)
 					startInterval(0.01)
 				}
@@ -63,9 +67,22 @@ export const useLayout = () => {
 					UserService.setIsHadNft(telegramId, false)
 					UserService.setCountDownTimer(telegramId)
 					UserService.updatePoints(telegramId, usePointsStore.getState().points)
+					queryClient.invalidateQueries({
+						queryKey: ['get-is-had-nft']
+					})
 					clearInterval(intervalId!)
 					startInterval(0.002)
 				}
+			}
+			if (!wallet && user && user.isHadNft) {
+				UserService.setIsHadNft(telegramId, false)
+				UserService.setCountDownTimer(telegramId)
+				UserService.updatePoints(telegramId, usePointsStore.getState().points)
+				queryClient.invalidateQueries({
+					queryKey: ['get-is-had-nft']
+				})
+				clearInterval(intervalId!)
+				startInterval(0.002)
 			}
 		}
 
