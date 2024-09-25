@@ -35,7 +35,7 @@ const Task: FC<ITaskProps> = ({
 	})
 
 	useEffect(() => {
-		if (user && user.completedTasks && user.completedTasks.includes('link')) {
+		if (user && user.completedTasks && user.completedTasks.includes(link)) {
 			setIsCheckMark(true)
 		}
 	}, [user])
