@@ -67,6 +67,9 @@ export const useLayout = () => {
 					startInterval(0.002)
 				}
 			}
+			if (!wallet) {
+				UserService.setIsHadNft(telegramId, false)
+			}
 		}
 
 		initIsHadNft()

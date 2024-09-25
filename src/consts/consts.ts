@@ -1,4 +1,6 @@
-export const telegramId = String(384432527)
+export const telegramId = String(
+	window.Telegram.WebApp.initDataUnsafe.user?.id!
+)
 export const DURATION_TIMER = 28800
 
 export const BUY_NP = 10000
