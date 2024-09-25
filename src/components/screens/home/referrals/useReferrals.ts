@@ -7,9 +7,14 @@ import { IUser } from '@/types/user.types'
 import { telegramId } from '@/consts/consts'
 
 export const useRefferals = () => {
-	const { data: user, isLoading } = useQuery({
+	const { data: user, isLoading: isUserLoading } = useQuery({
 		queryKey: ['get-user'],
 		queryFn: () => UserService.getUserFields<IUser>(telegramId)
+	})
+
+	const { data: totalReferralPoints, isLoading: isPointsLoading } = useQuery({
+		queryKey: ['get-total-referral-points'],
+		queryFn: () => UserService.getTotalReferralPoints(telegramId) // Передайте идентификатор пользователя
 	})
 
 	const inviteFriend = () => {
@@ -26,5 +31,11 @@ export const useRefferals = () => {
 		return 0
 	}
 
-	return { user, isLoading, getReferralsCount, inviteFriend }
+	return {
+		user,
+		isLoading: isUserLoading || isPointsLoading,
+		getReferralsCount,
+		inviteFriend,
+		totalReferralPoints: totalReferralPoints ?? 0
+	}
 }

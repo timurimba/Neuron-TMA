@@ -1,5 +1,10 @@
-import { get, ref, set, update } from 'firebase/database'
+import { Address } from '@ton/ton'
+import { get, ref, update } from 'firebase/database'
+import { v4 } from 'uuid'
 
+import { apiTelegramBot } from '@/api/api'
+
+import { BUY_NP, telegramId } from '@/consts/consts'
 import { database } from '@/database/firebase'
 
 export const UserService = {
@@ -11,22 +16,44 @@ export const UserService = {
 		return field
 	},
 
-	stopTimer: async (telegramUserId: string) => {
-		const userTimerRef = ref(database, `users/${telegramUserId}/timer`)
+	addTransactionBuy: async (wallet: string) => {
+		const uniqueId = v4()
+		const userMarketRef = ref(database, `market/buy/${telegramId}`)
 
-		return await set(userTimerRef, {
-			isProcessing: false,
-			duration: 28800,
-			durationExit: 28800
+		await update(userMarketRef, {
+			[uniqueId]: {
+				timestamp: new Date().toLocaleString(),
+				wallet: `${Address.parse(wallet!).toString({
+					bounceable: false
+				})}`,
+				points: BUY_NP
+			}
 		})
 	},
-	setIsHadNft: async (telegramUserId: string) => {
+
+	addTransactionSell: async (wallet: string) => {
+		const uniqueId = v4()
+		const userMarketRef = ref(database, `market/sell/${telegramId}`)
+
+		await update(userMarketRef, {
+			[uniqueId]: {
+				timestamp: new Date().toLocaleString(),
+				wallet: `${Address.parse(wallet!).toString({
+					bounceable: false
+				})}`,
+				points: BUY_NP
+			}
+		})
+	},
+
+	setIsHadNft: async (telegramUserId: string, value: boolean) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
 		await update(userRef, {
-			isHadNft: true
+			isHadNft: value
 		})
 	},
+
 	setAddressWallet: async (telegramUserId: string, addressWallet: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -34,6 +61,7 @@ export const UserService = {
 			addressWallet
 		})
 	},
+
 	updatePoints: async (telegramUserId: string, points: number) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -41,6 +69,15 @@ export const UserService = {
 			points
 		})
 	},
+
+	verifyEndTimer: async (telegramUserId: string) => {
+		const { data } = await apiTelegramBot.post('/api/verify-timer', {
+			telegramId: telegramUserId
+		})
+
+		return data
+	},
+
 	startTimer: async (telegramUserId: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
 
@@ -49,8 +86,10 @@ export const UserService = {
 			countDownTime: Date.now()
 		})
 	},
+
 	resetStartTimer: async (telegramUserId: string) => {
 		const userRef = ref(database, `users/${telegramUserId}`)
+
 		await update(userRef, {
 			startTimer: 0,
 			countDownTime: 0
@@ -62,5 +101,44 @@ export const UserService = {
 		await update(userRef, {
 			countDownTime: Date.now()
 		})
+	},
+
+	awardPointsToUser: async (telegramUserId: string, points: number) => {
+		return await apiTelegramBot.post('/api/award-points', {
+			telegramId: telegramUserId,
+			points
+		})
+	},
+
+	completeTask: async (telegramUserId: string, link: string) => {
+		const userCompletedTasksRef = ref(
+			database,
+			`users/${telegramUserId}/completedTasks`
+		)
+
+		const tasks =
+			(await get(userCompletedTasksRef)).val() !== null || undefined
+				? Object.values((await get(userCompletedTasksRef)).val())
+				: []
+
+		tasks.push(link)
+
+		await update(userCompletedTasksRef, {
+			...tasks
+		})
+	},
+	getTotalReferralPoints: async (telegramUserId: string) => {
+		try {
+			const pointsRef = ref(
+				database,
+				`users/${telegramUserId}/totalReferralPoints`
+			)
+			const pointsSnapshot = await get(pointsRef)
+			const points = pointsSnapshot.val()
+			return typeof points === 'number' ? points : 0
+		} catch (error) {
+			console.error('Error fetching totalReferralPoints:', error)
+			return 0 // Верните значение по умолчанию в случае ошибки
+		}
 	}
 }

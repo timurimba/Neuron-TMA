@@ -1,7 +1,16 @@
 export interface ITask {
-	bonus: number
-	total: number
+	id?: string
+	reward: number | null
+	budget: number | null
 	title: string
 	link: string
-	usersId: string[]
+	population: number
+	completed: number
+}
+
+export interface ITaskCreateDTO extends Omit<ITask, 'completed' | 'id'> {}
+
+export interface ITaskCheckSubscriptionDTO {
+	telegramId: string
+	channelId: string
 }

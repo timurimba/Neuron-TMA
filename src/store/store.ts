@@ -17,9 +17,9 @@ interface IIntervalStore {
 	setIntervalId: (value: NodeJS.Timeout) => void
 }
 
-interface IIsProcessingTimer {
-	isProcessingTimer: boolean
-	setIsProcessingTimer: (value: boolean) => void
+interface IForceUpdate {
+	forceUpdate: number
+	setForceUpdate: () => void
 }
 
 export const usePointsStore = create<IPointsStore>(set => ({
@@ -39,8 +39,8 @@ export const useIntervalStore = create<IIntervalStore>(set => ({
 	intervalId: null,
 	setIntervalId: value => set(() => ({ intervalId: value }))
 }))
-
-export const useIsProcessingTimerStore = create<IIsProcessingTimer>(set => ({
-	isProcessingTimer: false,
-	setIsProcessingTimer: value => set(() => ({ isProcessingTimer: value }))
+export const useForceUpdate = create<IForceUpdate>(set => ({
+	forceUpdate: 0,
+	setForceUpdate: () =>
+		set(({ forceUpdate }) => ({ forceUpdate: forceUpdate + 1 }))
 }))

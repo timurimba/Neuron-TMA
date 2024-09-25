@@ -9,6 +9,7 @@ const Profile: FC = () => {
 	return (
 		<div className={styles.profile}>
 			<Balance />
+
 			<BalanceNeurons />
 			<BuyNft />
 		</div>

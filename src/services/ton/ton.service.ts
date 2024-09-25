@@ -1,9 +1,14 @@
 import '@ton/core'
-import { Address, beginCell, toNano } from '@ton/core'
-import { sign } from 'ton-crypto'
-import { mnemonicToKeyPair } from 'tonweb-mnemonic'
+import {
+	Address,
+	WalletContractV4,
+	beginCell,
+	internal,
+	toNano
+} from '@ton/ton'
+import { mnemonicToWalletKey } from 'ton-crypto'
 
-import { apiBlockchain } from '@/api/api'
+import { apiBlockchain, client } from '@/api/api'
 
 export const TonService = {
 	getBalance: async (walletAddress: string) => {
@@ -38,7 +43,15 @@ export const TonService = {
 	transferNft: async (newOwnerAddress: string, nftContractAddress: string) => {
 		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
 
-		const keyPair = await mnemonicToKeyPair(mnemonicParts)
+		const keyPair = await mnemonicToWalletKey(mnemonicParts)
+
+		const seqno = await TonService.getSeqnoWallet()
+
+		const wallet = WalletContractV4.create({
+			publicKey: keyPair.publicKey,
+			walletId: 698983191,
+			workchain: 0
+		})
 
 		const internalMessageCustomPayload = beginCell()
 			.storeUint(0, 32)
@@ -56,43 +69,46 @@ export const TonService = {
 			.storeRef(internalMessageCustomPayload)
 			.endCell()
 
-		const internalMessage = beginCell()
-			.storeUint(0x18, 6) // bounce
-			.storeAddress(Address.parse(nftContractAddress))
-			.storeCoins(toNano(0.02))
-			.storeUint(1, 1 + 4 + 4 + 64 + 32 + 1 + 1) // We store 1 that means we have body as a reference
-			.storeRef(internalMessageBody)
-			.endCell()
+		const walletContract = client.open(wallet)
+
+		return await walletContract.sendTransfer({
+			secretKey: keyPair.secretKey,
+			seqno,
+			messages: [
+				internal({
+					value: toNano(0.03),
+					to: nftContractAddress,
+					body: internalMessageBody
+				})
+			]
+		})
+	},
+
+	sellTon: async (responseWallet: string) => {
+		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
+
+		const keyPair = await mnemonicToWalletKey(mnemonicParts)
 
 		const seqno = await TonService.getSeqnoWallet()
 
-		const toSign = beginCell()
-			.storeUint(698983191, 32) // subwallet_id
-			.storeUint(Math.floor(Date.now() / 1e3) + 60, 32) // Message expiration time, +60 = 1 minute
-			.storeUint(seqno, 32) // store seqno
-			.storeUint(0, 8)
-			.storeUint(3, 8)
-			.storeRef(internalMessage)
+		const wallet = WalletContractV4.create({
+			publicKey: keyPair.publicKey,
+			walletId: 698983191,
+			workchain: 0
+		})
 
-		const signature = sign(
-			toSign.endCell().hash(),
-			Buffer.from(keyPair.secretKey)
-		)
+		const walletContract = client.open(wallet)
 
-		const body = beginCell().storeBuffer(signature).storeBuilder(toSign)
-
-		const externalMessage = beginCell()
-			.storeUint(0b10, 2) // ext_in_msg_info$10
-			.storeUint(0, 2) // src -> addr_none
-			.storeAddress(Address.parse(import.meta.env.VITE_OWNER_WALLET_ADDRESS)) // Destination address
-			.storeCoins(0) // Import Fee
-			.storeBit(0) // No State Init
-			.storeBit(1) // We store Message Body as a reference
-			.storeRef(body) // Store Message Body as a reference
-			.endCell()
-
-		return await apiBlockchain.post('/blockchain/message', {
-			boc: externalMessage.toBoc().toString('base64')
+		return await walletContract.sendTransfer({
+			secretKey: keyPair.secretKey,
+			seqno,
+			messages: [
+				internal({
+					value: toNano(10),
+					to: responseWallet,
+					body: 'You received TON from Neuron'
+				})
+			]
 		})
 	},
 
