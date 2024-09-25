@@ -5,22 +5,13 @@ import { FC, useEffect, useState } from 'react'
 import Loader from '@/components/shared/loader/Loader'
 
 import { TaskService } from '@/services/task/task.service'
-import { UserService } from '@/services/user/user.service'
-
-import { ITask } from '@/types/task.types'
-import { IUser } from '@/types/user.types'
 
 import styles from './Tasks.module.scss'
 import CreationTask from './creation-task/CreationTask'
 import Task from './task/Task'
-import { telegramId } from '@/consts/consts'
 
 const Tasks: FC = () => {
-	const [tasks, setTasks] = useState<ITask[]>([])
-	const { data: user } = useQuery({
-		queryKey: ['get-user'],
-		queryFn: () => UserService.getUserFields<IUser>(telegramId)
-	})
+	const [tasks, setTasks] = useState<any[]>([])
 
 	const { data, isSuccess, isLoading } = useQuery({
 		queryKey: ['get-tasks'],
@@ -28,10 +19,9 @@ const Tasks: FC = () => {
 		select: data => {
 			return data
 				.filter(t => t.completed !== t.population)
-				.filter(t =>
-					user?.completedTasks ? !user?.completedTasks.includes(t.link) : true
-				)
+
 				.sort((a, b) => b.reward! - a.reward!)
+				.map(task => ({ ...task, isCompleted: false }))
 		}
 	})
 
@@ -53,7 +43,6 @@ const Tasks: FC = () => {
 									key={t.id}
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
-									exit={{ clipPath: 'inset(0 50% 0 50%)' }}
 									transition={{
 										type: 'spring',
 										stiffness: 300,
@@ -63,12 +52,13 @@ const Tasks: FC = () => {
 								>
 									<Task
 										id={t.id}
-										setTasks={setTasks}
 										link={t.link}
 										title={t.title}
 										population={t.population}
+										setTasks={setTasks}
 										completed={t.completed}
 										reward={t.reward}
+										isCompleted={t.isCompleted}
 									/>
 								</motion.div>
 							))

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Check } from 'lucide-react'
 import { type FC, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -11,6 +11,7 @@ import { UserService } from '@/services/user/user.service'
 import np from '@/assets/images/home/neuron-points.svg'
 
 import { ITaskCheckSubscriptionDTO } from '@/types/task.types'
+import { IUser } from '@/types/user.types'
 
 import styles from './Task.module.scss'
 import { ITaskProps } from './task.types'
@@ -23,10 +24,21 @@ const Task: FC<ITaskProps> = ({
 	population,
 	completed,
 	setTasks,
+	isCompleted,
 	link,
 	id
 }) => {
-	const [isAnimatedCheckMark, setIsAnimatedCheckMark] = useState(false)
+	const [isCheckMark, setIsCheckMark] = useState(false)
+	const { data: user } = useQuery({
+		queryKey: ['get-user'],
+		queryFn: () => UserService.getUserFields<IUser>(telegramId)
+	})
+
+	useEffect(() => {
+		if (user && user.completedTasks && user.completedTasks.includes('link')) {
+			setIsCheckMark(true)
+		}
+	}, [user])
 
 	const [isVisited, setIsVisited] = useState(false)
 	const {
@@ -43,13 +55,22 @@ const Task: FC<ITaskProps> = ({
 		const check = async () => {
 			switch (subscription) {
 				case true: {
+					setIsCheckMark(true)
 					toast.success("You've successfully completed the task")
 					UserService.completeTask(telegramId, link)
 					UserService.awardPointsToUser(telegramId, reward!)
 					TaskService.complete(id!)
-					setIsAnimatedCheckMark(true)
-					await sleep(500)
-					setTasks(prev => prev.filter(t => t.link !== link))
+					setTasks(tasks => {
+						return tasks.map((t: any) => {
+							if (t.link === link) {
+								return {
+									...t,
+									isCompleted: true
+								}
+							}
+							return t
+						})
+					})
 					break
 				}
 				case false: {
@@ -91,7 +112,7 @@ const Task: FC<ITaskProps> = ({
 	}, [isVisited])
 
 	const renderButtonState = () => {
-		if (isAnimatedCheckMark) {
+		if (isCheckMark || isCompleted) {
 			return <Check className={styles.check} size={18} />
 		}
 		if (isPendingCheckSubscription) {
@@ -115,7 +136,7 @@ const Task: FC<ITaskProps> = ({
 				</div>
 			</div>
 			<button
-				disabled={isPendingCheckSubscription || isAnimatedCheckMark}
+				disabled={isPendingCheckSubscription || isCheckMark || isCompleted}
 				onClick={handlerClickTask}
 			>
 				{renderButtonState()}
