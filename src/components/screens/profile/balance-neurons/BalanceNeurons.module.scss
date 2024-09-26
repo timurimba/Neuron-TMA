@@ -33,13 +33,50 @@
 			}
 		}
 		&:last-child {
-			@apply flex w-[65%] gap-x-5 justify-center items-center;
+			@apply flex w-[60%] gap-x-5 justify-center items-center;
 
 			> div {
 				&:first-child {
 					@apply flex text-center flex-col items-center gap-y-2;
+
 					> p {
-						@apply font-bold text-sm;
+						&:first-child {
+							@apply font-bold text-sm;
+						}
+					}
+
+					> p {
+						@apply flex justify-between font-normal text-sm; /* Flex и justify-between для p */
+						flex-wrap: nowrap; /* Убедимся, что элементы не переносятся на следующую строку */
+						width: 100%; /* Обеспечим, чтобы p занимал всю ширину родителя */
+
+						> span:first-child {
+							@apply flex-grow text-left; /* Заставляем первый span занимать всё доступное пространство */
+												
+						}
+
+						> span:last-child {
+							@apply text-right;
+							@apply mr-[25%];
+							
+						}
+					}
+					@media (max-width: 380px) {
+						> p {
+							@apply flex  text-sm; /* Убедимся, что элементы в p располагаются в ряд */
+							
+							> span:first-child {
+								@apply text-sm mr-1; /* Уменьшаем размер шрифта для первого span */
+								white-space: nowrap; /* Запрещаем перенос текста */
+							}
+					
+							> span:last-child {
+								@apply text-sm; /* Уменьшаем размер шрифта для второго span */
+								@apply mr-[10%]; /* Сдвигаем правый span влево */
+								max-width: 100px; /* Устанавливаем максимальную ширину, чтобы он не переносился */
+								white-space: nowrap; /* Запрещаем перенос текста */
+							}
+						}
 					}
 					> span {
 						@apply text-gray-500 font-bold;
