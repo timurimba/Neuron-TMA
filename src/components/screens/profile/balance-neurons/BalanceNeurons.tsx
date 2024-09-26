@@ -29,6 +29,11 @@ const BalanceNeurons: FC = () => {
 			<div>
 				<div>
 					<p>Open NEURONs</p>
+					<p >
+						<span>Get</span> 
+						<span>x5 NP</span>
+					</p>
+					<p>Get 5000 NEUR</p>
 					<span>
 						{isLoadingCountNfts
 							? 'Loading...'
