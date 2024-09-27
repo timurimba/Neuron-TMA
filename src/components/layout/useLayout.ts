@@ -51,38 +51,105 @@ export const useLayout = () => {
 						bounceable: false
 					})
 				)
+
 				const nfts = await TonService.getNfts(wallet)
+
 				if (nfts.length && !user.isHadNft) {
 					UserService.setIsHadNft(telegramId, true)
-					UserService.setCountDownTimer(telegramId)
-
-					UserService.updatePoints(telegramId, usePointsStore.getState().points)
 					queryClient.invalidateQueries({
 						queryKey: ['get-is-had-nft']
 					})
-					clearInterval(intervalId!)
-					startInterval(0.01)
+					if (user.startTimer) {
+						const remainingTimeCountDownTime =
+							DURATION_TIMER * 1000 - (user.startTimer - user.countDownTime)
+
+						const elapsedTimeForPoints =
+							Math.floor(
+								Math.min(
+									Date.now() - user.countDownTime,
+									remainingTimeCountDownTime
+								)
+							) / 1000
+
+						const points = user.isHadNft
+							? elapsedTimeForPoints * 0.01
+							: elapsedTimeForPoints * 0.002
+
+						UserService.awardPointsToUser(telegramId, points)
+
+						UserService.setCountDownTimer(telegramId)
+
+						UserService.updatePoints(
+							telegramId,
+							usePointsStore.getState().points
+						)
+
+						clearInterval(intervalId!)
+						startInterval(0.01)
+					}
 				}
 				if (!nfts.length && user.isHadNft) {
 					UserService.setIsHadNft(telegramId, false)
-					UserService.setCountDownTimer(telegramId)
-					UserService.updatePoints(telegramId, usePointsStore.getState().points)
 					queryClient.invalidateQueries({
 						queryKey: ['get-is-had-nft']
 					})
-					clearInterval(intervalId!)
-					startInterval(0.002)
+					if (user.startTimer) {
+						const remainingTimeCountDownTime =
+							DURATION_TIMER * 1000 - (user.startTimer - user.countDownTime)
+
+						const elapsedTimeForPoints =
+							Math.floor(
+								Math.min(
+									Date.now() - user.countDownTime,
+									remainingTimeCountDownTime
+								)
+							) / 1000
+
+						const points = user.isHadNft
+							? elapsedTimeForPoints * 0.01
+							: elapsedTimeForPoints * 0.002
+
+						UserService.awardPointsToUser(telegramId, points)
+						UserService.setCountDownTimer(telegramId)
+						UserService.updatePoints(
+							telegramId,
+							usePointsStore.getState().points
+						)
+
+						clearInterval(intervalId!)
+						startInterval(0.002)
+					}
 				}
 			}
+
 			if (!wallet && user && user.isHadNft) {
 				UserService.setIsHadNft(telegramId, false)
-				UserService.setCountDownTimer(telegramId)
-				UserService.updatePoints(telegramId, usePointsStore.getState().points)
 				queryClient.invalidateQueries({
 					queryKey: ['get-is-had-nft']
 				})
-				clearInterval(intervalId!)
-				startInterval(0.002)
+				if (user.startTimer) {
+					const remainingTimeCountDownTime =
+						DURATION_TIMER * 1000 - (user.startTimer - user.countDownTime)
+
+					const elapsedTimeForPoints =
+						Math.floor(
+							Math.min(
+								Date.now() - user.countDownTime,
+								remainingTimeCountDownTime
+							)
+						) / 1000
+
+					const points = user.isHadNft
+						? elapsedTimeForPoints * 0.01
+						: elapsedTimeForPoints * 0.002
+
+					UserService.awardPointsToUser(telegramId, points)
+					UserService.setCountDownTimer(telegramId)
+					UserService.updatePoints(telegramId, usePointsStore.getState().points)
+
+					clearInterval(intervalId!)
+					startInterval(0.002)
+				}
 			}
 		}
 
@@ -127,6 +194,7 @@ export const useLayout = () => {
 						const data = await mutateVerifyTimer(telegramId)
 						if (data.isVerify) {
 							UserService.resetStartTimer(telegramId)
+
 							UserService.updatePoints(telegramId, points + user.points)
 							UserService.awardPointsToUser(telegramId, points)
 							queryClient.invalidateQueries({
