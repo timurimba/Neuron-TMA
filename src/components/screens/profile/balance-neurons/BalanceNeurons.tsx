@@ -17,7 +17,7 @@ const BalanceNeurons: FC = () => {
 	return (
 		<div className={styles.wrapper}>
 			<div>
-				<h2>My NEURONs</h2>
+				<h2>My <br /> NEURONs</h2>
 				<strong>
 					{isLoadingMyCountNft ? 'Loading...' : myCountNft ? myCountNft : 0}
 				</strong>
@@ -28,12 +28,22 @@ const BalanceNeurons: FC = () => {
 			</div>
 			<div>
 				<div>
-					<p>Open NEURONs</p>
+					<p>Open <br /> NEURONs</p>
+					
 					<span>
+					<strong>
 						{isLoadingCountNfts
 							? 'Loading...'
 							: `${availableCountNfts}/${countAllNfts}`}
+							</strong>
 					</span>
+					<div className={styles.amountNeuronWrapper}>
+					<p >
+						<span>Get:</span> 
+						<span>x5 on NP</span>
+					</p>
+					<p className={styles.amountNeuron}>5000 NEUR</p>
+					</div>
 				</div>
 				<div>
 					<div
