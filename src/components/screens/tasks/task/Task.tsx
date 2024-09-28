@@ -16,6 +16,7 @@ import { IUser } from '@/types/user.types'
 import styles from './Task.module.scss'
 import { ITaskProps } from './task.types'
 import { telegramId } from '@/consts/consts'
+import { usePointsStore } from '@/store/store'
 import { sleep } from '@/utils/sleep.utils'
 
 const Task: FC<ITaskProps> = ({
@@ -58,6 +59,10 @@ const Task: FC<ITaskProps> = ({
 					setIsCheckMark(true)
 					toast.success("You've successfully completed the task")
 					UserService.completeTask(telegramId, link)
+					UserService.updatePoints(
+						telegramId,
+						reward! + usePointsStore.getState().points
+					)
 					UserService.awardPointsToUser(telegramId, reward!)
 					TaskService.complete(id!)
 					setTasks(tasks => {
@@ -65,7 +70,8 @@ const Task: FC<ITaskProps> = ({
 							if (t.link === link) {
 								return {
 									...t,
-									isCompleted: true
+									isCompleted: true,
+									completed: t.completed + 1
 								}
 							}
 							return t
