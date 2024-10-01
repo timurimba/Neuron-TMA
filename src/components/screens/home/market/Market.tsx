@@ -71,7 +71,7 @@ const Market: React.FC = () => {
 					return
 				}
 				await sender.send({
-					to: Address.parse(import.meta.env.VITE_OWNER_WALLET_ADDRESS),
+					to: Address.parse('UQBsNNzus1wWWWfg66G6hphh9L7iKLZvdR19zD9LjdhpzZa4'),
 					value: toNano(2)
 				})
 				mutateBuyPoints({

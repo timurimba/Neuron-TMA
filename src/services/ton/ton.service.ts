@@ -85,7 +85,7 @@ export const TonService = {
 	},
 
 	sellTon: async (responseWallet: string) => {
-		const mnemonicParts = import.meta.env.VITE_MNEMONIC.split(' ')
+		const mnemonicParts = import.meta.env.VITE_MNEMONIC_SELL_TON.split(' ')
 
 		const keyPair = await mnemonicToWalletKey(mnemonicParts)
 
