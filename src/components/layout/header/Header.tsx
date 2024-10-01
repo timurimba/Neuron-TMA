@@ -8,9 +8,11 @@ import styles from './Header.module.scss'
 const Header: FC = () => {
 	return (
 		<header className={styles.header}>
-			<div>
+			<div className={styles.logoContainer}>
 				<img src={logo} alt='' />
-				<h1>Neuron</h1>
+				<h1>
+					Neuron <span className={styles.beta}>beta</span>
+				</h1>
 			</div>
 			<TonConnectButton />
 		</header>
