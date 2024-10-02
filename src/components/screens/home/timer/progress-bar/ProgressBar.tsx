@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 
 import styles from './ProgressBar.module.scss'
-import { DURATION_TIMER } from '@/consts/consts'
+import DURATION_TIMER from '@/consts/consts'
 import { useTimerStore } from '@/store/store'
 import { formatTime } from '@/utils/format-time.utils'
 

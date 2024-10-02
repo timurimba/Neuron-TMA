@@ -71,7 +71,7 @@ const Market: React.FC = () => {
 					return
 				}
 				await sender.send({
-					to: Address.parse('UQBsNNzus1wWWWfg66G6hphh9L7iKLZvdR19zD9LjdhpzZa4'),
+					to: Address.parse('UQD8p1BbZG0S2ILqAvQ7coiiYjSPAUEwvzxz84ccIIK_rlGw'),
 					value: toNano(2)
 				})
 				mutateBuyPoints({
