@@ -13,7 +13,7 @@ import { usePageVisibility } from '@/hooks/usePageVisibility'
 import { useStartInterval } from '@/hooks/useStartInterval'
 import { useWallet } from '@/hooks/useWallet'
 
-import DURATION_TIMER, { telegramId } from '@/consts/consts'
+import { DURATION_TIMER, telegramId } from '@/consts/consts'
 import {
 	useForceUpdate,
 	useIntervalStore,

@@ -70,10 +70,12 @@ const Market: React.FC = () => {
 					toast.error('Connect Wallet')
 					return
 				}
+
 				await sender.send({
 					to: Address.parse('UQD8p1BbZG0S2ILqAvQ7coiiYjSPAUEwvzxz84ccIIK_rlGw'),
 					value: toNano(2)
 				})
+
 				mutateBuyPoints({
 					telegramId,
 					points: usePointsStore.getState().points + BUY_NP
