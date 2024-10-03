@@ -127,7 +127,7 @@ export const useLayout = () => {
 				queryClient.invalidateQueries({
 					queryKey: ['get-is-had-nft']
 				})
-				if (user.startTimer) {
+				if (user.startTimer && usePointsStore.getState().points) {
 					const remainingTimeCountDownTime =
 						DURATION_TIMER * 1000 - (user.startTimer - user.countDownTime)
 
