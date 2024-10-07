@@ -27,8 +27,6 @@ export const useBuyNft = () => {
 
 	const { intervalId } = useIntervalStore(state => state)
 
-	UserService.setCountDownTimer(telegramId)
-
 	const { startInterval } = useStartInterval()
 
 	const randomImage: any = useMemo(() => {
