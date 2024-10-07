@@ -50,7 +50,7 @@ export const useBuyNft = () => {
 		try {
 			await sender.send({
 				to: import.meta.env.VITE_OWNER_WALLET_ADDRESS,
-				value: toNano(6)
+				value: toNano(7)
 			})
 
 			const availableNfts = await TonService.getNfts(
