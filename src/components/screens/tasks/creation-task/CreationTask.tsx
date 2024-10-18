@@ -56,7 +56,7 @@ const CreationTask: FC = () => {
 	return (
 		<div className={styles.creation}>
 			<button onClick={() => setIsCreation(!isCreation)}>
-				{isCreation ? <CircleMinus /> : <CirclePlus />}
+				{isCreation ? <CircleMinus className={styles.icon}/> : <CirclePlus className={styles.icon} />}
 			</button>
 			<div
 				className={cn({

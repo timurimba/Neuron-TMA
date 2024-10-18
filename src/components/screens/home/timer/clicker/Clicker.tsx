@@ -2,6 +2,7 @@ import { type FC } from 'react'
 
 import Face2 from '@/assets/images/home/face2.png'
 import Face from '@/assets/images/home/face.png'
+import Info from '@/assets/images/home/info.svg'
 import LeftArm from '@/assets/images/home/left hand.png'
 import RightArm from '@/assets/images/home/right hand.png'
 
@@ -17,7 +18,9 @@ const Clicker: FC = () => {
 
 	return (
 		<div className={styles.clicker}>
-			<div>
+ <a href="https://t.me/Neuron_terms_channel" target="_blank" rel="noopener noreferrer">
+            <img className={styles.info} src={Info} alt='Info' />
+        </a>			<div className={styles.container}>
 				<img
 					onClick={() => {
 						if (!isPending && user && !user.startTimer) {
