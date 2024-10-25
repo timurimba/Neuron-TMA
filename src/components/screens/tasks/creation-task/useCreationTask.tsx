@@ -23,6 +23,7 @@ export const useCreationTask = () => {
 	const [isCreation, setIsCreation] = useState(false)
 	const { setPoints } = usePointsStore(state => state)
 	const [link, setLink] = useState('')
+	const [isBotTask, setIsBotTask] = useState(false) // Новое состояние для отслеживания задач на бота
 
 	const [step, setStep] = useState(1)
 
@@ -46,6 +47,7 @@ export const useCreationTask = () => {
 		} else {
 			setValue('population', 0)
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [budget, reward])
 
 	const { mutate: mutateVerify, isPending: isPendingVerification } =
@@ -53,11 +55,11 @@ export const useCreationTask = () => {
 			mutationKey: ['bot-verify'],
 			mutationFn: (channelId: string) => TaskService.checkBotAdmin(channelId),
 			onSuccess: () => {
-				toast.success("You've passed verification")
+				toast.success('Вы прошли проверку')
 				setStep(3)
 			},
 			onError: () => {
-				toast.error("You haven't passed verification")
+				toast.error('Вы не прошли проверку')
 			}
 		})
 
@@ -66,9 +68,7 @@ export const useCreationTask = () => {
 		mutationFn: (task: ITaskCreateDTO) => TaskService.deployTask(task),
 		onSuccess: async () => {
 			toast.success("You've deployed the task")
-			queryClient.invalidateQueries({
-				queryKey: ['get-tasks']
-			})
+			queryClient.invalidateQueries({ queryKey: ['get-tasks'] })
 
 			UserService.updatePoints(
 				telegramId,
@@ -83,9 +83,10 @@ export const useCreationTask = () => {
 			setValue('link', '')
 			setValue('budget', null)
 			setValue('reward', null)
+			setIsBotTask(false) // Сброс состояния задачи на бота после развертывания
 		},
 		onError: () => {
-			toast.error('Oops, try again')
+			toast.error('Ошибка, попробуйте снова')
 		}
 	})
 
@@ -104,8 +105,16 @@ export const useCreationTask = () => {
 			value = '@' + value
 		}
 
+		// Проверяем, если значение заканчивается на 'bot', чтобы установить состояние
+		if (value.endsWith('bot')) {
+			setIsBotTask(true)
+		} else {
+			setIsBotTask(false)
+		}
+
 		setLink(value.trim())
 		setValue('link', value.trim())
+		console.log('Updated link:', value.trim()) // Логирование
 	}
 
 	const handlerCopyBot = async () => {
@@ -119,49 +128,47 @@ export const useCreationTask = () => {
 				return (
 					<Field
 						value={link}
-						placeholder='@task_channel'
+						placeholder='@task_channel or @bot'
 						type='text'
-						{...register('link', {
-							required: true
-						})}
+						{...register('link', { required: true })}
 						onChange={handleChangeLink}
 					/>
 				)
 			}
 			case 2: {
-				return ''
+				return isBotTask ? null : '' // Пропустить, если задача на бота
 			}
 			case 3: {
 				return (
 					<div className='flex flex-col gap-y-4'>
 						<Field
 							className={`${errors.title && '!border-red-500'}`}
-							placeholder='Title (Maximum number of characters 34)'
+							placeholder='Заголовок (максимум 34 символа)'
 							type='text'
 							{...register('title', {
 								required: true,
 								pattern: {
 									value: /^.{0,34}$/,
-									message: 'Maximum number of characters 34'
+									message: 'Максимум 34 символа'
 								}
 							})}
 						/>
 						<Select
 							control={control}
 							name='budget'
-							placeholder='NP Budget'
+							placeholder='NP Бюджет'
 							options={budgetData}
 						/>
 						<Select
 							control={control}
 							name='reward'
-							placeholder='NP Reward'
+							placeholder='NP Награда'
 							options={rewardsData}
 						/>
 						<div className='px-[3px] flex items-center justify-between'>
 							<div className='flex items-center gap-x-2'>
 								<Users />
-								<p>Amount of subscribers:</p>
+								<p>Количество подписчиков:</p>
 							</div>
 							<span>{watch('population')}</span>
 						</div>
@@ -177,7 +184,7 @@ export const useCreationTask = () => {
 				return 'Enter'
 			}
 			case 2: {
-				return 'Verify'
+				return isBotTask ? 'Creat task' : 'Verify'
 			}
 			case 3: {
 				return 'Deploy'
@@ -206,18 +213,21 @@ export const useCreationTask = () => {
 			}
 		}
 	}
-
 	return {
+		register,
 		isCreation,
 		setIsCreation,
-		handleSubmit,
-		step,
+		handleSubmit, // Подключаем обработчик к форме
 		mutateDeploy,
 		mutateVerify,
+		step,
 		setStep,
 		renderStepTitle,
 		renderSteps,
 		renderTextButtonStep,
-		isPending
+		handlerCopyBot, // Возвращаем обработчик копирования
+		setIsBotTask, // Возвращаем функцию для изменения состояния задачи на бота
+		isPending,
+		isBotTask
 	}
 }
