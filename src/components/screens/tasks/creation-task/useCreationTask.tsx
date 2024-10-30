@@ -143,7 +143,7 @@ export const useCreationTask = () => {
 					<div className='flex flex-col gap-y-4'>
 						<Field
 							className={`${errors.title && '!border-red-500'}`}
-							placeholder='Заголовок (максимум 34 символа)'
+							placeholder='Title (максимум 34 символа)'
 							type='text'
 							{...register('title', {
 								required: true,
@@ -156,13 +156,13 @@ export const useCreationTask = () => {
 						<Select
 							control={control}
 							name='budget'
-							placeholder='NP Бюджет'
+							placeholder='NP Budget'
 							options={budgetData}
 						/>
 						<Select
 							control={control}
 							name='reward'
-							placeholder='NP Награда'
+							placeholder='NP Reward'
 							options={rewardsData}
 						/>
 						<div className='px-[3px] flex items-center justify-between'>
@@ -195,7 +195,7 @@ export const useCreationTask = () => {
 	const renderStepTitle = () => {
 		switch (step) {
 			case 1: {
-				return 'Add link to public group or channel'
+				return 'Add link to public group/bot or channel'
 			}
 			case 2: {
 				return (

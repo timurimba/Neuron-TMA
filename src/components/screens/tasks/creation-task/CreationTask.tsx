@@ -24,7 +24,8 @@ const CreationTask: FC = () => {
 		renderSteps,
 		renderTextButtonStep,
 		isPending,
-		setIsBotTask
+		setIsBotTask,
+		isBotTask
 	} = useCreationTask()
 
 
@@ -83,12 +84,12 @@ const CreationTask: FC = () => {
 							<button
 								type='button'
 								className='active:scale-95 transition-all'
-								onClick={() => setStep(step - 1)}
+								onClick={() => setStep(isBotTask && step === 3 ? 1 : step - 1)}
 							>
 								<CircleArrowLeft />
 							</button>
 						)}
-						<p>Step {step}.</p>
+						<p>Step {step === 3 && isBotTask ? 2 : step}.</p>
 					</div>
 					<p>{renderStepTitle()}</p>
 					{renderSteps()}
