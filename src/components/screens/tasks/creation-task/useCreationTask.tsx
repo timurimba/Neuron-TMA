@@ -55,11 +55,11 @@ export const useCreationTask = () => {
 			mutationKey: ['bot-verify'],
 			mutationFn: (channelId: string) => TaskService.checkBotAdmin(channelId),
 			onSuccess: () => {
-				toast.success('You have passed the check')
+				toast.success('You have successfully passed the verification')
 				setStep(3)
 			},
 			onError: () => {
-				toast.error('You didn not pass the check')
+				toast.error('You have not passed the verification')
 			}
 		})
 
