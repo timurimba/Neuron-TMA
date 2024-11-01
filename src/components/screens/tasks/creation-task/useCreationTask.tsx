@@ -55,11 +55,11 @@ export const useCreationTask = () => {
 			mutationKey: ['bot-verify'],
 			mutationFn: (channelId: string) => TaskService.checkBotAdmin(channelId),
 			onSuccess: () => {
-				toast.success('Вы прошли проверку')
+				toast.success('You have passed the check')
 				setStep(3)
 			},
 			onError: () => {
-				toast.error('Вы не прошли проверку')
+				toast.error('You didn not pass the check')
 			}
 		})
 
@@ -143,13 +143,13 @@ export const useCreationTask = () => {
 					<div className='flex flex-col gap-y-4'>
 						<Field
 							className={`${errors.title && '!border-red-500'}`}
-							placeholder='Title (максимум 34 символа)'
+							placeholder='Title (maximum 34 characters)'
 							type='text'
 							{...register('title', {
 								required: true,
 								pattern: {
 									value: /^.{0,34}$/,
-									message: 'Максимум 34 символа'
+									message: 'maximum 34 characters'
 								}
 							})}
 						/>
@@ -168,7 +168,7 @@ export const useCreationTask = () => {
 						<div className='px-[3px] flex items-center justify-between'>
 							<div className='flex items-center gap-x-2'>
 								<Users />
-								<p>Количество подписчиков:</p>
+								<p>Number of subscribers:</p>
 							</div>
 							<span>{watch('population')}</span>
 						</div>
