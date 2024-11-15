@@ -1,7 +1,7 @@
 import cn from 'clsx'
 import { CircleArrowLeft, CircleMinus, CirclePlus } from 'lucide-react'
 import { type FC } from 'react'
-import { SubmitHandler } from 'react-hook-form'
+import { SubmitHandler, } from 'react-hook-form'
 
 import Button from '@/components/shared/button/Button'
 import Loader from '@/components/shared/loader/Loader'
@@ -23,25 +23,38 @@ const CreationTask: FC = () => {
 		renderStepTitle,
 		renderSteps,
 		renderTextButtonStep,
-		isPending
+		isPending,
+		setIsBotTask,
+		isBotTask
 	} = useCreationTask()
 
-	const submitHandler: SubmitHandler<ITaskCreateDTO> = data => {
-		if (isPending) {
-			return
+
+	const submitHandler: SubmitHandler<ITaskCreateDTO> = async data => {
+		if (isPending) return
+
+		console.log('Submitting data:', data) // Логирование перед проверками
+		// Проверка наличия поля link
+		if (!data.link) {
+			console.error('Link is undefined')
+			return // или можно обработать ошибку другим способом
 		}
 
 		switch (step) {
 			case 1: {
-				setStep(2)
+				if (data.link.endsWith('bot')) {
+					setIsBotTask(true)
+					setStep(3)
+				} else {
+					setStep(2)
+				}
 				break
 			}
 			case 2: {
-				mutateVerify(data.link)
+				await mutateVerify(data.link)
 				break
 			}
 			case 3: {
-				mutateDeploy({
+				await mutateDeploy({
 					title: data.title,
 					budget: data.budget,
 					reward: data.reward,
@@ -53,32 +66,30 @@ const CreationTask: FC = () => {
 		}
 	}
 
+	
+
 	return (
 		<div className={styles.creation}>
 			<button onClick={() => setIsCreation(!isCreation)}>
-				{isCreation ? <CircleMinus /> : <CirclePlus />}
+				{isCreation ? (
+					<CircleMinus className={styles.icon} />
+				) : (
+					<CirclePlus className={styles.icon} />
+				)}
 			</button>
-			<div
-				className={cn({
-					[styles.active]: isCreation
-				})}
-			>
+			<div className={cn({ [styles.active]: isCreation })}>
 				<form onSubmit={handleSubmit(submitHandler)}>
-					<div
-						className={cn(styles.head, {
-							[styles.initial]: step === 1
-						})}
-					>
+					<div className={cn(styles.head, { [styles.initial]: step === 1 })}>
 						{step > 1 && (
 							<button
 								type='button'
-								className='active:scale-95 transition-all '
-								onClick={() => setStep(step - 1)}
+								className='active:scale-95 transition-all'
+								onClick={() => setStep(isBotTask && step === 3 ? 1 : step - 1)}
 							>
 								<CircleArrowLeft />
 							</button>
 						)}
-						<p>Step {step}.</p>
+						<p>Step {step === 3 && isBotTask ? 2 : step}.</p>
 					</div>
 					<p>{renderStepTitle()}</p>
 					{renderSteps()}
